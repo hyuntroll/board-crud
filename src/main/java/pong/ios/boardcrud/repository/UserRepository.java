@@ -2,8 +2,8 @@ package pong.ios.boardcrud.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pong.ios.boardcrud.domain.entity.user.BoardUser;
+import pong.ios.boardcrud.domain.entity.user.UserEntity;
 
 @Repository
-public interface BoardUserRepository extends JpaRepository<BoardUser, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 }

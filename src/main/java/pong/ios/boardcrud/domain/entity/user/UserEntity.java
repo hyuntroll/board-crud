@@ -6,11 +6,14 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Entity(name="user")
+@Entity
+@Table(name="user")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardUser implements Serializable {
+@AllArgsConstructor
+@Builder
+public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +25,11 @@ public class BoardUser implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @Column()
+    private String role;
+
     @Column(name="u_email", nullable = false, unique = true)
     private String email;
+
 
 }

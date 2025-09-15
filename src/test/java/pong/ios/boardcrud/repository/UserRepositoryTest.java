@@ -3,13 +3,13 @@ package pong.ios.boardcrud.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pong.ios.boardcrud.domain.entity.user.BoardUser;
+import pong.ios.boardcrud.domain.entity.user.UserEntity;
 
 @SpringBootTest
-class BoardUserRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
-    private BoardUserRepository boardUserRepository;
+    private UserRepository userRepository;
 
 
     @Test
@@ -18,13 +18,13 @@ class BoardUserRepositoryTest {
         String password = "2345";
         String email = "hsm200905219@dgsw.hs.kr";
 
-        BoardUser user = BoardUser.builder()
+        UserEntity user = UserEntity.builder()
                 .username(name)
                 .password(password)
                 .email(email)
                 .build();
 
-        boardUserRepository.save(user);
+        userRepository.save(user);
     }
 
 }

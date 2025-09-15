@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pong.ios.boardcrud.domain.entity.user.BoardUser;
+import pong.ios.boardcrud.domain.entity.user.UserEntity;
 
 @Entity(name="post")
 @Getter
@@ -26,9 +26,9 @@ public class Post {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="writer")
-    private BoardUser writer;
+    private UserEntity writer;
 
-    public Post(String title, String content, BoardUser writer) {
+    public Post(String title, String content, UserEntity writer) {
         this.title = title;
         this.content = content;
         this.writer = writer;

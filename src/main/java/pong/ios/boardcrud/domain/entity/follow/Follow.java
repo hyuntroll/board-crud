@@ -1,11 +1,8 @@
 package pong.ios.boardcrud.domain.entity.follow;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import pong.ios.boardcrud.domain.entity.user.BoardUser;
+import lombok.*;
+import pong.ios.boardcrud.domain.entity.user.UserEntity;
 
 import java.io.Serializable;
 
@@ -21,10 +18,16 @@ public class Follow implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("followerId")
     @JoinColumn(name = "follower_id")
-    private BoardUser follower;
+    private UserEntity follower;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("followingId")
     @JoinColumn(name = "following_id")
-    private BoardUser following;
+    private UserEntity following;
+
+    public Follow(FollowId id, UserEntity follower, UserEntity following) {
+        this.id = id;
+        this.follower = follower;
+        this.following = following;
+    }
 }

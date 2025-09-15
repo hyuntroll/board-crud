@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pong.ios.boardcrud.domain.entity.post.Post;
-import pong.ios.boardcrud.domain.entity.user.BoardUser;
+import pong.ios.boardcrud.domain.entity.user.UserEntity;
 
 @Entity
 @Table(name="comment")
@@ -22,7 +22,7 @@ public class Comment {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "user")
-    private BoardUser commenter;
+    private UserEntity commenter;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="post")
@@ -34,7 +34,7 @@ public class Comment {
     @Column
     private String content;
 
-    public Comment(String title, String content, BoardUser commenter, Post post) {
+    public Comment(String title, String content, UserEntity commenter, Post post) {
         this.title = title;
         this.content = content;
         this.commenter = commenter;

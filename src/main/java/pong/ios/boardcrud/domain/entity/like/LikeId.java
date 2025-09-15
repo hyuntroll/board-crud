@@ -14,7 +14,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 public class LikeId implements Serializable {
 
-    private Long writerId;
+    private Long likerId;
 
     private Long postId;
 
@@ -22,11 +22,11 @@ public class LikeId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof LikeId that)) return false;
-        return Objects.equals(writerId, that.writerId ) && Objects.equals(postId, that.postId);
+        return Objects.equals(likerId, that.likerId ) && Objects.equals(postId, that.postId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(writerId, postId);
+        return Objects.hash(likerId, postId);
     }
 }
