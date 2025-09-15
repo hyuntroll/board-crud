@@ -1,0 +1,35 @@
+package pong.ios.boardcrud.repository;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import pong.ios.boardcrud.domain.entity.follow.Follow;
+import pong.ios.boardcrud.domain.entity.follow.FollowId;
+import pong.ios.boardcrud.domain.entity.user.BoardUser;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class FollowRepositoryTest {
+
+    @Autowired
+    private FollowRepository followRepository;
+
+    @Autowired
+    private BoardUserRepository boardUserRepository;
+
+    @Test
+    void following() {
+        BoardUser user1 = boardUserRepository.findById(1L).get();
+        BoardUser user2 = boardUserRepository.findById(4L).get();
+
+        FollowId followId = new FollowId(user1.getId(), user2.getId());
+        Follow follow = new Follow(followId, user1, user2);
+
+        followRepository.save(follow);
+
+    }
+
+}
