@@ -32,4 +32,8 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return this.userEntity.getUsername();
     }
+
+    public String getEmail() {
+         return this.userEntity.getEmail();
+    }
 }
