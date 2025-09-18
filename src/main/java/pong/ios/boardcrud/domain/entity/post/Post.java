@@ -24,7 +24,8 @@ public class Post {
     @Column(name="p_content", nullable = false)
     private String content;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name="writer")
     private UserEntity writer;
 
