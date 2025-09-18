@@ -4,6 +4,9 @@ package pong.ios.boardcrud.config;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,6 +34,22 @@ public class SecurityConfig {
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+//        Deprecated::
+//        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+//
+//        hierarchy.setHierarchy(
+//                        "ROLE_ADMIN > ROLE_TEACHER\n"+
+//                        "ROLE_TEACHER > ROLE_USER\n");
+//        return hierarchy;
+
+        return RoleHierarchyImpl.fromHierarchy("""
+               ROLE_ADMIN > ROLE_TEACHER
+               ROLE_TEACHER > ROLE_USER
+               """);
     }
 
     @Bean
@@ -82,8 +101,23 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/post", "/user/join").permitAll()
+                        .requestMatchers("/login", "/user/join").permitAll()
+
+
+                        .requestMatchers(HttpMethod.GET, "/post").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/post/**").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/post").hasRole("USER")
+
+                        .requestMatchers(HttpMethod.DELETE, "/post/**").hasRole("USER")
+
+
+                        .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user").permitAll()
+
+
                         .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated());
 
         // JWTFilter 등록
