@@ -1,10 +1,12 @@
 package pong.ios.boardcrud.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +34,7 @@ public class JWTFilter extends OncePerRequestFilter {
         // Authorization 헤더 검증
         if ( authorization == null || !authorization.startsWith("Bearer ")) {
 
-            log.info("Can't find Bearer token");
+//            log.info("Can't find Bearer token");
             filterChain.doFilter(request, response);
 
             return;
@@ -41,11 +43,12 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorization.split(" ")[1];
 
         // 토큰 소멸 시간  검증
-        if ( jwtUtil.isExpired(token) ) {
-
-            log.info("token is expired");
-            filterChain.doFilter(request, response);
-
+        try { jwtUtil.isExpired(token); }
+        catch (ExpiredJwtException e )
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(e.getMessage());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             return;
         }
 
