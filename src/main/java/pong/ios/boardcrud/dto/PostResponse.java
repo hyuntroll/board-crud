@@ -1,15 +1,15 @@
 package pong.ios.boardcrud.dto;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import pong.ios.boardcrud.domain.entity.post.Post;
-import pong.ios.boardcrud.domain.entity.user.UserEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class PostResponse {
 
     private Long id;
@@ -18,12 +18,22 @@ public class PostResponse {
 
     private String content;
 
-    private UserResponse writer;
+    private String writer;
 
-    public PostResponse(Post post) {
+    private List<CommentResponse> comments;
+
+    private int likes;
+
+    public PostResponse(Post post, int likes) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.writer = new UserResponse(post.getWriter());
+        this.writer = post.getWriter().getUsername();
+        this.likes = likes;
+
+        this.comments = post.getComments().stream()
+                .map(CommentResponse::new)
+                .collect(Collectors.toList());
+
     }
 }
