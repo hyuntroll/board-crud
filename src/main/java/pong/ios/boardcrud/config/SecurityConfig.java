@@ -76,7 +76,7 @@ public class SecurityConfig {
 
                                 CorsConfiguration configuration = new CorsConfiguration();
 
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3001"));
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -101,19 +101,29 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/user/join").permitAll()
+                        .requestMatchers("/login", "/user/join", "/swagger-ui/**", "/v3/**").permitAll()
 
 
                         .requestMatchers(HttpMethod.GET, "/post").permitAll()
                         .requestMatchers(HttpMethod.GET, "/post/**").permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/post").hasRole("USER")
-
+                        .requestMatchers(HttpMethod.PATCH, "/post/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "/post/**").hasRole("USER")
+
+
+                        .requestMatchers(HttpMethod.POST, "/comment/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "/comment").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/comment").hasRole("USER")
+
+                        .requestMatchers(HttpMethod.POST, "/like/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/like/*").hasRole("USER")
 
 
                         .requestMatchers(HttpMethod.GET, "/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("USER")
 
 
                         .requestMatchers("/admin").hasRole("ADMIN")
