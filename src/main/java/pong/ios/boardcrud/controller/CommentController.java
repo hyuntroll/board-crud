@@ -24,7 +24,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{postId}")
-    public ResponseEntity<CommentResponse> addComment(@PathVariable Long postId, CommentRequest comment) {
+    public ResponseEntity<CommentResponse> addComment(@PathVariable Long postId, @RequestBody CommentRequest comment) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         try {
@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     @PatchMapping
-    public ResponseEntity<CommentResponse> updateComment(CommentRequest comment) {
+    public ResponseEntity<CommentResponse> updateComment(@RequestBody CommentRequest comment) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         try {
@@ -60,7 +60,7 @@ public class CommentController {
 
 
     @DeleteMapping
-    public ResponseEntity<String> deleteComment(CommentRequest comment) {
+    public ResponseEntity<String> deleteComment(@RequestBody CommentRequest comment) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         try {

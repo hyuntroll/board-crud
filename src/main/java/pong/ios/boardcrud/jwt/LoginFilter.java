@@ -1,8 +1,10 @@
 package pong.ios.boardcrud.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,8 +13,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pong.ios.boardcrud.dto.CustomUserDetails;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -21,16 +25,39 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JWTUtil jwtUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    private final ObjectMapper objectMapper;
+
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ObjectMapper objectMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        String username = null;
+        String password = null;
+
+        try {
+
+            if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())) {
+
+                Map<String, String> requestMap = objectMapper.readValue(request.getInputStream(), Map.class);
+                username = requestMap.get("username");
+                password = requestMap.get("password");
+
+            }
+            else {
+                // 기존 form-data 방식
+
+                username = obtainUsername(request);
+                password = obtainPassword(request);
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
@@ -49,7 +76,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, email, role, 60*60*10L);
+        String token = jwtUtil.createJwt(username, email, role, 60*60*60*10L);
 
         response.addHeader("Authorization", "Bearer " + token);
 
