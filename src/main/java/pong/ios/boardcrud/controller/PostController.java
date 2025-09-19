@@ -43,7 +43,7 @@ public class PostController {
 
 
     @PostMapping
-    public ResponseEntity<Void> writePost(PostRequest post) { // 이거 어노테이션 있어도 좋을듯
+    public ResponseEntity<Void> writePost(@RequestBody PostRequest post) { // 이거 어노테이션 있어도 좋을듯
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if (postService.addPost(post, username)) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -72,7 +72,7 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long postId, PostRequest post) {
+    public ResponseEntity<Void> updatePost(@PathVariable Long postId, @RequestBody PostRequest post) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 

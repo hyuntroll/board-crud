@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pong.ios.boardcrud.domain.entity.comment.Comment;
+import pong.ios.boardcrud.domain.entity.like.Like;
 import pong.ios.boardcrud.domain.entity.user.UserEntity;
 
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade =  CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     public Post(String title, String content, UserEntity writer) {
         this.title = title;
