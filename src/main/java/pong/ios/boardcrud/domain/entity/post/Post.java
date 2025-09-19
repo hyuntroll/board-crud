@@ -6,7 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pong.ios.boardcrud.domain.entity.comment.Comment;
 import pong.ios.boardcrud.domain.entity.user.UserEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name="post")
 @Getter
@@ -25,14 +29,22 @@ public class Post {
     private String content;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="writer")
     private UserEntity writer;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Post(String title, String content, UserEntity writer) {
         this.title = title;
         this.content = content;
         this.writer = writer;
+    }
+
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
     }
 
 }

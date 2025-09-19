@@ -9,7 +9,7 @@ import pong.ios.boardcrud.domain.entity.user.UserEntity;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "like")
+@Table(name = "likes")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,17 +21,21 @@ public class Like implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @MapsId("likerId")
     @JoinColumn(name = "liker_id")
-    private UserEntity writer;
+    private UserEntity liker;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @MapsId("postId")
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Like(LikeId id, UserEntity writer, Post post) {
+    public Like(LikeId id, UserEntity user, Post post) {
+
         this.id = id;
-        this.writer = writer;
+
+        this.liker = user;
+
         this.post = post;
+
     }
 
 }

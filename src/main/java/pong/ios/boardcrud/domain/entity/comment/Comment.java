@@ -21,21 +21,18 @@ public class Comment {
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "commenter")
     private UserEntity commenter;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="post")
+    @JoinColumn(name = "post")
     private Post post;
-
-    @Column
-    private String title;
 
     @Column
     private String content;
 
-    public Comment(String title, String content, UserEntity commenter, Post post) {
-        this.title = title;
+
+    public Comment(String content, UserEntity commenter, Post post) {
         this.content = content;
         this.commenter = commenter;
         this.post = post;
