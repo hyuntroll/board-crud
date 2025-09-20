@@ -1,7 +1,6 @@
 package pong.ios.boardcrud.service;
 
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pong.ios.boardcrud.domain.entity.comment.Comment;
