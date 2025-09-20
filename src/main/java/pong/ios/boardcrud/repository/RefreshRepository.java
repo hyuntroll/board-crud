@@ -1,10 +1,13 @@
 package pong.ios.boardcrud.repository;
 
 import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import pong.ios.boardcrud.domain.entity.refresh.RefreshEntity;
 
-public interface RefreshRepository extends JpaRepository<RefreshEntity, Long> {
+
+@Repository
+public interface RefreshRepository extends CrudRepository<RefreshEntity, Long> {
 
     boolean existsByRefresh(String refresh);
 

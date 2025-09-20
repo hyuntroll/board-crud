@@ -1,19 +1,18 @@
 package pong.ios.boardcrud.domain.entity.refresh;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.Date;
 
-@Table( name = "refresh_token")
-@Entity
 @Getter
 @Setter
+@RedisHash( value = "refresh", timeToLive = 86400000L)
 public class RefreshEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;

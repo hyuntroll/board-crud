@@ -114,7 +114,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/user/join", "/swagger-ui/**", "/v3/**").permitAll()
+                        .requestMatchers("/login", "/logout", "/user/join", "/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/reissue").permitAll()
 
 
