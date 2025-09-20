@@ -15,6 +15,7 @@ import pong.ios.boardcrud.domain.entity.user.UserEntity;
 import pong.ios.boardcrud.dto.CustomUserDetails;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 public class JWTFilter extends OncePerRequestFilter {
@@ -29,38 +30,37 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // request 에서 Authorization 헤더를 찾음
-        String authorization = request.getHeader("Authorization");
+        String accessToken = request.getHeader("access");
 
         // Authorization 헤더 검증
-        if ( authorization == null || !authorization.startsWith("Bearer ")) {
+        if ( accessToken == null ) {
 
-//            log.info("Can't find Bearer token");
             filterChain.doFilter(request, response);
 
             return;
         }
 
-        String token = authorization.split(" ")[1];
-
-        // 토큰 소멸 시간  검증
-        try { jwtUtil.isExpired(token); }
+        // 토큰 만료 확인 여부
+        try { jwtUtil.isExpired(accessToken); }
         catch (ExpiredJwtException e )
         {
+            // response body
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
+
+            // status code
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write(e.getMessage());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             return;
         }
 
         // 토큰에서 username과 role
-        String username = jwtUtil.getUsername(token);
-        String email = jwtUtil.getEmail(token);
-        String role = jwtUtil.getRole(token);
+        String username = jwtUtil.getUsername(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
         // userEntity를 생성하여 설정
         UserEntity userEntity = UserEntity.builder()
                 .username(username)
-                .email(email)
                 .role(role)
                 .password("null")
                 .build();
