@@ -2,6 +2,7 @@ package pong.ios.boardcrud.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
@@ -66,25 +67,37 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
-        String email = customUserDetails.getEmail();
+        String username = authentication.getName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, email, role, 60*60*60*10L);
+        String access = jwtUtil.createJwt("access", username, role, 680000L);
+        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        response.setHeader("access",  access);
+        response.addCookie(createCookie("refresh",  refresh));
+        response.setStatus(HttpServletResponse.SC_OK);
 
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws AuthenticationException {
         response.setStatus(401);
+    }
+
+    public Cookie createCookie(String name, String value) {
+
+        Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(60 * 60 * 24);
+//        cookie.setSecure(true);
+//        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 
 }
