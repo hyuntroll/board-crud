@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pong.ios.boardcrud.repository.RefreshRepository;
 import pong.ios.boardcrud.service.ReissueService;
 
 //@Controller

@@ -6,22 +6,19 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pong.ios.boardcrud.domain.entity.refresh.RefreshEntity;
-import pong.ios.boardcrud.dto.CustomUserDetails;
-import pong.ios.boardcrud.repository.RefreshRepository;
+import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
+import pong.ios.boardcrud.service.RedisService;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -33,8 +30,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final ObjectMapper objectMapper;
 
-    private final RefreshRepository refreshRepository;
+    private final RedisService redisService;
 
+    @Value("${spring.jwt.expired-ms.refresh}")
+    private Long refreshExpiredMs;
+
+    @Value("${spring.jwt.expired-ms.access}")
+    private Long accessExpiredMs;
 
 
     @Override
@@ -58,10 +60,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", username, role, 680000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        String access = jwtUtil.createJwt("access", username, role, accessExpiredMs);
+        String refresh = jwtUtil.createJwt("refresh", username, role, refreshExpiredMs);
 
-        addRefreshEntity(username, refresh, 86400000L);
+//        addRefreshEntity(username, refresh, 86400000L);
+        redisService.saveToken(username, refresh, refreshExpiredMs);
 
         response.setHeader("access",  access);
         response.addCookie(createCookie("refresh",  refresh));
@@ -83,19 +86,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         cookie.setHttpOnly(true);
 
         return cookie;
-    }
-
-    private void addRefreshEntity(String username, String refresh, Long expireMs) {
-
-        Date date = new Date(System.currentTimeMillis() + expireMs);
-
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date);
-
-        refreshRepository.save(refreshEntity);
-
     }
 
 }

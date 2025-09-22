@@ -3,7 +3,6 @@ package pong.ios.boardcrud.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.CustomLog;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,7 +23,7 @@ import pong.ios.boardcrud.jwt.CustomLogoutFilter;
 import pong.ios.boardcrud.jwt.JWTFilter;
 import pong.ios.boardcrud.jwt.JWTUtil;
 import pong.ios.boardcrud.jwt.LoginFilter;
-import pong.ios.boardcrud.repository.RefreshRepository;
+import pong.ios.boardcrud.service.RedisService;
 
 import java.util.Collections;
 
@@ -36,12 +35,12 @@ public class SecurityConfig {
 
     private final JWTUtil jwtUtil;
 
-    private final RefreshRepository refreshRepository;
+    private final RedisService redisService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RedisService redisService) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
-        this.refreshRepository = refreshRepository;
+        this.redisService = redisService;
     }
 
     @Bean
@@ -149,9 +148,9 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
         // 필터 등록
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, objectMapper(), refreshRepository), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, objectMapper(), redisService), UsernamePasswordAuthenticationFilter.class);
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisService), LogoutFilter.class);
         //세션 설정
         http
                 .sessionManagement((session) -> session

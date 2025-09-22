@@ -9,9 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pong.ios.boardcrud.domain.entity.refresh.RefreshEntity;
+import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
 import pong.ios.boardcrud.jwt.JWTUtil;
-import pong.ios.boardcrud.repository.RefreshRepository;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import java.util.Date;
 
@@ -21,7 +22,14 @@ public class ReissueService {
 
     private final JWTUtil jwtUtil;
 
-    private final RefreshRepository refreshRepository;
+    private final RedisService redisService;
+
+    @Value("${spring.jwt.expired-ms.refresh}")
+    private Long refreshExpiredMs;
+
+    @Value("${spring.jwt.expired-ms.access}")
+    private Long accessExpiredMs;
+
 
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
@@ -46,7 +54,7 @@ public class ReissueService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("refresh token is expired");
         }
 
-        if ( !refreshRepository.existsByRefresh(refresh) ) {
+        if (redisService.findByToken(refresh).isEmpty() ) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid refresh token");
         }
 
@@ -54,11 +62,11 @@ public class ReissueService {
         String username  = jwtUtil.getUsername(refresh);
         String role = jwtUtil.getRole(refresh);
 
-        String access = jwtUtil.createJwt("access", username, role, 680000L);
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        String access = jwtUtil.createJwt("access", username, role, accessExpiredMs);
+        String newRefresh = jwtUtil.createJwt("refresh", username, role, refreshExpiredMs);
 
-        refreshRepository.deleteByRefresh(refresh);
-        addRefreshEntity(username, newRefresh, 86400000L);
+        redisService.deleteToken(refresh);
+        addRefreshEntity(username, newRefresh, refreshExpiredMs);
 
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh",  newRefresh));
@@ -70,9 +78,7 @@ public class ReissueService {
     public Cookie createCookie(String name, String value) {
 
         Cookie cookie = new Cookie(name, value);
-        cookie.setMaxAge(60 * 60 * 24);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
+        cookie.setMaxAge(10);
         cookie.setHttpOnly(true);
 
         return cookie;
@@ -80,14 +86,10 @@ public class ReissueService {
 
     private void addRefreshEntity(String username, String refresh, Long expireMs) {
 
-        Date date = new Date(System.currentTimeMillis() + expireMs);
+        RefreshToken refreshEntity = new RefreshToken(username, refresh, expireMs);
 
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date);
+        redisService.saveToken(refreshEntity);
 
-        refreshRepository.save(refreshEntity);
 
     }
 
