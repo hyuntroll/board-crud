@@ -46,9 +46,7 @@ public class ReissueService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("refresh token is expired");
         }
 
-        if ( !jwtUtil.getCategory(refresh).equals("refresh") ||
-             !refreshRepository.existsByRefresh(refresh)
-            ) {
+        if ( !refreshRepository.existsByRefresh(refresh) ) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid refresh token");
         }
 

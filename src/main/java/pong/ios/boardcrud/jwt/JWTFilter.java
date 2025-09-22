@@ -31,7 +31,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // request 에서 Authorization 헤더를 찾음
         String accessToken = request.getHeader("access");
-
         // Authorization 헤더 검증
         if ( accessToken == null ) {
 
@@ -73,6 +72,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
+        
         filterChain.doFilter(request, response);
 
 

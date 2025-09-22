@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,8 +25,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{postId}")
-    public ResponseEntity<CommentResponse> addComment(@PathVariable Long postId, @RequestBody CommentRequest comment) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ResponseEntity<CommentResponse> addComment(@PathVariable Long postId, @RequestBody CommentRequest comment, Authentication auth) {
+        String username = auth.getName();
 
         try {
 
@@ -41,8 +42,8 @@ public class CommentController {
     }
 
     @PatchMapping
-    public ResponseEntity<CommentResponse> updateComment(@RequestBody CommentRequest comment) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ResponseEntity<CommentResponse> updateComment(@RequestBody CommentRequest comment, Authentication auth) {
+        String username = auth.getName();
 
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
@@ -60,8 +61,8 @@ public class CommentController {
 
 
     @DeleteMapping
-    public ResponseEntity<String> deleteComment(@RequestBody CommentRequest comment) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ResponseEntity<String> deleteComment(@RequestBody CommentRequest comment, Authentication auth) {
+        String username = auth.getName();
 
         try {
             commentService.deleteComment(comment, username);

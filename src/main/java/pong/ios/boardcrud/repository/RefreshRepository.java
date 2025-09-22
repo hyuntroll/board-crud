@@ -13,4 +13,7 @@ public interface RefreshRepository extends CrudRepository<RefreshEntity, Long> {
 
     @Transactional
     void deleteByRefresh(String refresh);
+
+    @Transactional
+    void deleteAllByUsername(String username);
 }

@@ -40,28 +40,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        String username = null;
-        String password = null;
-
-        try {
-
-            if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())) {
-
-                Map<String, String> requestMap = objectMapper.readValue(request.getInputStream(), Map.class);
-                username = requestMap.get("username");
-                password = requestMap.get("password");
-
-            }
-            else {
-                // 기존 form-data 방식
-
-                username = obtainUsername(request);
-                password = obtainPassword(request);
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String username = obtainUsername(request);
+        String password = obtainPassword(request);
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
