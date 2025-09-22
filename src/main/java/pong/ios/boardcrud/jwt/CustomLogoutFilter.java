@@ -9,19 +9,19 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.GenericFilterBean;
-import pong.ios.boardcrud.repository.RefreshRepository;
+import pong.ios.boardcrud.service.RedisService;
 
 import java.io.IOException;
 
 public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
+    private final RedisService redisService;
 
-    public CustomLogoutFilter(JWTUtil jwtUtil, RefreshRepository refreshRepository) {
+    public CustomLogoutFilter(JWTUtil jwtUtil, RedisService redisService) {
 
         this.jwtUtil = jwtUtil;
-        this.refreshRepository = refreshRepository;
+        this.redisService = redisService;
     }
 
     @Override
@@ -83,9 +83,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        //DB에 저장되어 있는지 확인
-        Boolean isExist = refreshRepository.existsByRefresh(refresh);
-        if (!isExist) {
+        // Redis에 저장되어 있는지 확인
+        if ( redisService.findByToken(refresh).isEmpty() ) {
 
             //response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -94,7 +93,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
-        refreshRepository.deleteByRefresh(refresh);
+        redisService.deleteToken(refresh);
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie("refresh", null);
