@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.jwt;
+package pong.ios.boardcrud.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -72,7 +72,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        
+
         filterChain.doFilter(request, response);
 
 

@@ -19,10 +19,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import pong.ios.boardcrud.jwt.CustomLogoutFilter;
-import pong.ios.boardcrud.jwt.JWTFilter;
-import pong.ios.boardcrud.jwt.JWTUtil;
-import pong.ios.boardcrud.jwt.LoginFilter;
+import pong.ios.boardcrud.security.jwt.CustomLogoutFilter;
+import pong.ios.boardcrud.security.jwt.JWTFilter;
+import pong.ios.boardcrud.security.jwt.JWTUtil;
+import pong.ios.boardcrud.security.jwt.LoginFilter;
 import pong.ios.boardcrud.service.RedisService;
 
 import java.util.Collections;

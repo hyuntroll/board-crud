@@ -10,11 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
-import pong.ios.boardcrud.jwt.JWTUtil;
+import pong.ios.boardcrud.security.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Value;
-
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +21,10 @@ public class ReissueService {
 
     private final RedisService redisService;
 
-    @Value("${spring.jwt.expired-ms.refresh}")
+    @Value("${spring.jwt.expiration.refresh}")
     private Long refreshExpiredMs;
 
-    @Value("${spring.jwt.expired-ms.access}")
+    @Value("${spring.jwt.expiration.access}")
     private Long accessExpiredMs;
 
 

@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.jwt;
+package pong.ios.boardcrud.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

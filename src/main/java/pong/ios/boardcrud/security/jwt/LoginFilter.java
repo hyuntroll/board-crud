@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.jwt;
+package pong.ios.boardcrud.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -13,11 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
 import pong.ios.boardcrud.service.RedisService;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 
 
@@ -31,13 +29,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper;
 
     private final RedisService redisService;
-
-    @Value("${spring.jwt.expired-ms.refresh:18000000}")
-    private Long refreshExpiredMs;
-
-    @Value("${spring.jwt.expired-ms.access:1200000}")
-    private Long accessExpiredMs;
-
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
