@@ -36,6 +36,9 @@ public class ReissueService {
         String refresh = null;
 
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refresh")) {
@@ -62,11 +65,11 @@ public class ReissueService {
         String username  = jwtUtil.getUsername(refresh);
         String role = jwtUtil.getRole(refresh);
 
-        String access = jwtUtil.createJwt("access", username, role, accessExpiredMs);
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, refreshExpiredMs);
+        String access = jwtUtil.createJwt("access", username, role, 1200000L);
+        String newRefresh = jwtUtil.createJwt("refresh", username, role, 18000000L);
 
         redisService.deleteToken(refresh);
-        addRefreshEntity(username, newRefresh, refreshExpiredMs);
+        redisService.saveToken(username, newRefresh, 18000000L);
 
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh",  newRefresh));

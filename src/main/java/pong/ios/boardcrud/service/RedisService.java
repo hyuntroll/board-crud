@@ -22,7 +22,7 @@ public class RedisService {
                 "token:" + refreshToken,
                 token.getUsername()
         );
-        redisTemplate.expire("token" + refreshToken, token.getExpireMs(), TimeUnit.SECONDS);
+        redisTemplate.expire("token" + refreshToken, token.getExpireMs(), TimeUnit.MILLISECONDS);
     }
 
     public void saveToken(String username, String refreshToken, Long expireMs) {
@@ -30,7 +30,7 @@ public class RedisService {
                 "token:" + refreshToken,
                 username
         );
-        redisTemplate.expire("token:" + refreshToken, expireMs, TimeUnit.SECONDS);
+        redisTemplate.expire("token:" + refreshToken, expireMs, TimeUnit.MILLISECONDS);
     }
 
     public Optional<RefreshToken> findByToken(String token) {
