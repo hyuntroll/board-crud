@@ -7,8 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pong.ios.boardcrud.dto.JoinRequest;
-import pong.ios.boardcrud.repository.UserRepository;
+import pong.ios.boardcrud.dto.join.JoinRequest;
 import pong.ios.boardcrud.service.UserService;
 
 @RequiredArgsConstructor

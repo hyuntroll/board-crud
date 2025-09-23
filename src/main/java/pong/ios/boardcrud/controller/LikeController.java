@@ -4,9 +4,11 @@ package pong.ios.boardcrud.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pong.ios.boardcrud.dto.like.LikeResponse;
 import pong.ios.boardcrud.service.PostService;
 
 import java.util.NoSuchElementException;
@@ -19,13 +21,14 @@ public class LikeController {
     private final PostService postService;
 
     @PostMapping("/{postId}")
-    public ResponseEntity<Void> likePost(@PathVariable Long postId) {
+    public ResponseEntity<LikeResponse> likePost(@PathVariable Long postId, Authentication auth) {
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = auth.getName();
 
         try {
 
             postService.likePost(postId, username);
+
             return ResponseEntity.ok().build();
 
         }
@@ -37,17 +40,13 @@ public class LikeController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> unlikePost(@PathVariable Long postId) {
+    public ResponseEntity<LikeResponse> unlikePost(@PathVariable Long postId, Authentication auth) {
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = auth.getName();
 
         try {
-
-            postService.unlikePost(postId, username);
-            return ResponseEntity.ok().build();
-
+            return ResponseEntity.ok().body(postService.unlikePost(postId, username));
         }
-
         catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

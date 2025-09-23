@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import pong.ios.boardcrud.domain.entity.follow.Follow;
 import pong.ios.boardcrud.domain.entity.follow.FollowId;
 import pong.ios.boardcrud.domain.entity.user.UserEntity;
-import pong.ios.boardcrud.dto.JoinRequest;
-import pong.ios.boardcrud.dto.UserResponse;
+import pong.ios.boardcrud.dto.join.JoinRequest;
+import pong.ios.boardcrud.dto.user.UserResponse;
 import pong.ios.boardcrud.repository.FollowRepository;
 import pong.ios.boardcrud.repository.UserRepository;
 

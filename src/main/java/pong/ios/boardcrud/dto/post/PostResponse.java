@@ -1,9 +1,10 @@
-package pong.ios.boardcrud.dto;
+package pong.ios.boardcrud.dto.post;
 
 
 import lombok.Getter;
 import lombok.Setter;
 import pong.ios.boardcrud.domain.entity.post.Post;
+import pong.ios.boardcrud.dto.comment.CommentResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;

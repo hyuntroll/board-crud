@@ -32,10 +32,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final RedisService redisService;
 
-    @Value("${spring.jwt.expired-ms.refresh}")
+    @Value("${spring.jwt.expired-ms.refresh:18000000}")
     private Long refreshExpiredMs;
 
-    @Value("${spring.jwt.expired-ms.access}")
+    @Value("${spring.jwt.expired-ms.access:1200000}")
     private Long accessExpiredMs;
 
 
@@ -60,11 +60,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", username, role, accessExpiredMs);
-        String refresh = jwtUtil.createJwt("refresh", username, role, refreshExpiredMs);
+        String access = jwtUtil.createJwt("access", username, role, 1200000L);
+        String refresh = jwtUtil.createJwt("refresh", username, role, 18000000L);
 
 //        addRefreshEntity(username, refresh, 86400000L);
-        redisService.saveToken(username, refresh, refreshExpiredMs);
+        redisService.saveToken(username, refresh, 18000000L);
 
         response.setHeader("access",  access);
         response.addCookie(createCookie("refresh",  refresh));

@@ -2,14 +2,12 @@ package pong.ios.boardcrud.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pong.ios.boardcrud.domain.entity.user.UserEntity;
-import pong.ios.boardcrud.dto.UserResponse;
+import pong.ios.boardcrud.dto.user.UserResponse;
 import pong.ios.boardcrud.service.UserService;
 
 import java.util.NoSuchElementException;

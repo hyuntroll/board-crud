@@ -2,17 +2,14 @@ package pong.ios.boardcrud.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pong.ios.boardcrud.dto.CommentRequest;
-import pong.ios.boardcrud.dto.CommentResponse;
+import pong.ios.boardcrud.dto.comment.CommentRequest;
+import pong.ios.boardcrud.dto.comment.CommentResponse;
 import pong.ios.boardcrud.service.CommentService;
-import pong.ios.boardcrud.service.PostService;
 
 import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;

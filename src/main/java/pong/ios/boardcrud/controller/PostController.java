@@ -1,21 +1,16 @@
 package pong.ios.boardcrud.controller;
 
-import com.sun.net.httpserver.HttpContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pong.ios.boardcrud.dto.CommentRequest;
-import pong.ios.boardcrud.dto.PostRequest;
-import pong.ios.boardcrud.dto.PostResponse;
-import pong.ios.boardcrud.service.CommentService;
+import pong.ios.boardcrud.dto.post.PostRequest;
+import pong.ios.boardcrud.dto.post.PostResponse;
 import pong.ios.boardcrud.service.PostService;
 
 import java.nio.file.AccessDeniedException;
-import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,43 +38,46 @@ public class PostController {
 
 
     @PostMapping
-    public ResponseEntity<Void> writePost(@RequestBody PostRequest post) { // 이거 어노테이션 있어도 좋을듯
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (postService.addPost(post, username)) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    public ResponseEntity<PostResponse> writePost(@RequestBody PostRequest post, Authentication auth) { // 이거 어노테이션 있어도 좋을듯
+
+        String username = auth.getName();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.addPost(post, username));
+
     }
 
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, Authentication auth) {
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = auth.getName();
 
         try {
 
             postService.deletePost(postId, username);
+
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
         } catch (NoSuchElementException e) {
+
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+
         } catch (AccessDeniedException e) {
+
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+
         }
 
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long postId, @RequestBody PostRequest post) {
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Long postId, @RequestBody PostRequest post, Authentication auth) {
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = auth.getName();
 
         try {
-
-            postService.modifyPost(postId, post, username);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .body(postService.modifyPost(postId, post, username));
 
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

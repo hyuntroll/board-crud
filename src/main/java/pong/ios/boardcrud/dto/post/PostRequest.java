@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.dto;
+package pong.ios.boardcrud.dto.post;
 
 
 import lombok.Getter;

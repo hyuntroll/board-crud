@@ -1,17 +1,15 @@
 package pong.ios.boardcrud.service;
 
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import pong.ios.boardcrud.domain.entity.comment.Comment;
 import pong.ios.boardcrud.domain.entity.like.Like;
 import pong.ios.boardcrud.domain.entity.like.LikeId;
 import pong.ios.boardcrud.domain.entity.post.Post;
 import pong.ios.boardcrud.domain.entity.user.UserEntity;
-import pong.ios.boardcrud.dto.PostRequest;
-import pong.ios.boardcrud.dto.PostResponse;
+import pong.ios.boardcrud.dto.like.LikeResponse;
+import pong.ios.boardcrud.dto.post.PostRequest;
+import pong.ios.boardcrud.dto.post.PostResponse;
 import pong.ios.boardcrud.repository.LikeRepository;
 import pong.ios.boardcrud.repository.PostRepository;
 import pong.ios.boardcrud.repository.UserRepository;
@@ -36,7 +34,7 @@ public class PostService {
         Post post = postRepository.findPostById(id);
 
         if (post != null) {
-            return new PostResponse(post, likeRepository.countByPost(post));
+            return new PostResponse(post, countPostLike(id));
         }
 
         throw new NoSuchElementException();
@@ -54,14 +52,14 @@ public class PostService {
 
     }
 
-    public boolean addPost(PostRequest postRequest, String writer) {
+    public PostResponse addPost(PostRequest postRequest, String writer) {
         String title = postRequest.getTitle();
         String content = postRequest.getContent();
         UserEntity writerEntity = userRepository.findByUsername(writer);
         Post post = new Post(title, content, writerEntity);
 
         postRepository.save(post);
-        return true;
+        return new PostResponse(post, 0);
     }
 
     public void deletePost(Long id, String writer) throws AccessDeniedException, NoSuchElementException {
@@ -76,7 +74,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public void modifyPost(Long id, PostRequest postRequest, String writer) throws AccessDeniedException, NoSuchElementException {
+    public PostResponse modifyPost(Long id, PostRequest postRequest, String writer) throws AccessDeniedException, NoSuchElementException {
 
         Post post = postRepository.findPostById(id);
 
@@ -92,9 +90,10 @@ public class PostService {
         post.setContent(postRequest.getContent());
         postRepository.save(post);
 
+        return new PostResponse(post, countPostLike(id));
     }
 
-    public void likePost(Long id, String username) throws NoSuchElementException {
+    public LikeResponse likePost(Long id, String username) throws NoSuchElementException {
 
         Post post = postRepository.findPostById(id);
         UserEntity user = userRepository.findByUsername(username);
@@ -108,9 +107,11 @@ public class PostService {
             likeRepository.save(new Like(likeId, user, post));
         }
 
+        return new LikeResponse(id, countPostLike(id));
+
     }
 
-    public void unlikePost(Long id, String username) throws NoSuchElementException {
+    public LikeResponse unlikePost(Long id, String username) throws NoSuchElementException {
 
         Post post = postRepository.findPostById(id);
         UserEntity user = userRepository.findByUsername(username);
@@ -122,6 +123,8 @@ public class PostService {
         if (likeRepository.existsByLikerAndPost(user, post)) {
             likeRepository.deleteByLikerAndPost(user, post);
         }
+
+        return new LikeResponse(id, countPostLike(id));
 
     }
 

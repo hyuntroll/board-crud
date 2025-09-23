@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.dto;
+package pong.ios.boardcrud.dto.join;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
