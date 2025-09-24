@@ -13,6 +13,7 @@ import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
 import pong.ios.boardcrud.security.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
 import pong.ios.boardcrud.security.jwt.JwtUtil;
+import pong.ios.boardcrud.util.CookieUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -31,19 +32,7 @@ public class ReissueService {
 
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
-        String refresh = null;
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        for (Cookie cookie : cookies) {
-
-            if (cookie.getName().equals("refresh")) {
-
-                refresh = cookie.getValue();
-            }
-        }
+        String refresh = CookieUtil.getCookie(request, "refresh");
         if (refresh == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("refresh token is null");
         }
