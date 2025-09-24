@@ -6,7 +6,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,11 +23,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     private final ObjectMapper objectMapper;
 
     private final RedisService redisService;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -51,8 +52,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", username, role, 1200000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role, 18000000L);
+        String access = jwtTokenProvider.provideAccessToken(username, role);
+        String refresh = jwtTokenProvider.provideRefreshToken(username, role);
 
 //        addRefreshEntity(username, refresh, 86400000L);
         redisService.saveToken(username, refresh, 18000000L);

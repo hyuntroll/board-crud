@@ -15,10 +15,10 @@ import java.io.IOException;
 
 public class CustomLogoutFilter extends GenericFilterBean {
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
     private final RedisService redisService;
 
-    public CustomLogoutFilter(JWTUtil jwtUtil, RedisService redisService) {
+    public CustomLogoutFilter(JwtUtil jwtUtil, RedisService redisService) {
 
         this.jwtUtil = jwtUtil;
         this.redisService = redisService;

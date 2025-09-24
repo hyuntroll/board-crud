@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class jwtTokenProvider {
+public class JwtTokenProvider {
 
     @Value("${spring.jwt.expiration.refresh}")
     private Long refreshExpiredMs;
@@ -15,7 +15,7 @@ public class jwtTokenProvider {
     @Value("${spring.jwt.expiration.access}")
     private Long accessExpiredMs;
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     private String createToken(String category, String username, String role, Long expiredMs) {
         return jwtUtil.createJwt(category, username, role, expiredMs);

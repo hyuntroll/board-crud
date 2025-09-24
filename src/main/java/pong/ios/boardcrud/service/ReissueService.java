@@ -10,14 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
-import pong.ios.boardcrud.security.jwt.JWTUtil;
+import pong.ios.boardcrud.security.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
+import pong.ios.boardcrud.security.jwt.JwtUtil;
 
 @Service
 @RequiredArgsConstructor
 public class ReissueService {
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     private final RedisService redisService;
 
