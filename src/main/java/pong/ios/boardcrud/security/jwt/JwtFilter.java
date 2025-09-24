@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pong.ios.boardcrud.domain.entity.user.UserEntity;
-import pong.ios.boardcrud.dto.CustomUserDetails;
+import pong.ios.boardcrud.dto.user.CustomUserDetails;
 
 import java.io.IOException;
 import java.io.PrintWriter;
