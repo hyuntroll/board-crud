@@ -66,7 +66,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         //expired check
         try {
-            jwtUtil.isExpired(refresh);
+            jwtUtil.validateToken(refresh);
         } catch (ExpiredJwtException e) {
 
             //response status code

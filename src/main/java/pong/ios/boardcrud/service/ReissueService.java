@@ -38,7 +38,7 @@ public class ReissueService {
         }
 
         try {
-            jwtUtil.isExpired(refresh);
+            jwtUtil.validateToken(refresh);
         }
         catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("refresh token is expired");

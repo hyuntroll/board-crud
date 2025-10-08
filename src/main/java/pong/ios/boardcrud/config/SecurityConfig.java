@@ -144,7 +144,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
         // 필터 등록
         http
-                .addFilterAt(new JwtLoginFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, redisService, objectMapper()), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new JwtLoginFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, redisService, objectMapper(), jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisService), LogoutFilter.class);
         //세션 설정

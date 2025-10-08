@@ -40,8 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         // 토큰 만료 확인 여부
-        try { jwtUtil.isExpired(accessToken); }
-        catch (ExpiredJwtException e )
+        if (jwtUtil.validateToken(accessToken))
         {
             // response body
             PrintWriter writer = response.getWriter();

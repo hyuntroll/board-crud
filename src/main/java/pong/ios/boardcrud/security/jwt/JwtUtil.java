@@ -17,12 +17,23 @@ public class JwtUtil {
 
     private final SecretKey secret;
 
+    @Value("${spring.jwt.expiration.access}")
+    public long accessExpiration;
+
+    @Value("${spring.jwt.expiration.refresh}")
+    public long refreshExpiration;
+
     public JwtUtil(@Value("${spring.jwt.secret}")String secret) {
         this.secret = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
     public Claims extractClaims(String token) {
-        return Jwts.parser().verifyWith(secret).build().parseSignedClaims(token).getPayload();
+        try {
+            return Jwts.parser().verifyWith(secret).build().parseSignedClaims(token).getPayload();
+        }
+        catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
     }
 
     public String getUsername(String token) {
@@ -47,13 +58,8 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secret).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
-    public boolean isExpired(String token) {
-        try {
-            return extractClaims(token).getExpiration().before(new Date());
-        }
-        catch (ExpiredJwtException e) {
-            return true;
-        }
+    public boolean validateToken(String token) {
+        return extractClaims(token).getExpiration().before(new Date());
     }
 
 //    public String createJwt(String username, String email, String role, Long expiredMs) {

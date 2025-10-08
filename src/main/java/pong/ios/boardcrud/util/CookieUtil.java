@@ -10,10 +10,8 @@ public class CookieUtil {
 
     public static void createCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
         cookie.setPath("/");
-
         response.addCookie(cookie);
     }
 

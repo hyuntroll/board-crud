@@ -25,7 +25,7 @@ public class RedisService {
         redisTemplate.expire("token" + refreshToken, token.getExpireMs(), TimeUnit.MILLISECONDS);
     }
 
-    public void saveToken(String username, String refreshToken, Long expireMs) {
+    public void saveToken(String username, String refreshToken, long expireMs) {
         redisTemplate.opsForValue().set(
                 "token:" + refreshToken,
                 username
