@@ -4,6 +4,7 @@ package pong.ios.boardcrud.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,12 +29,8 @@ public class JwtUtil {
     }
 
     public Claims extractClaims(String token) {
-        try {
-            return Jwts.parser().verifyWith(secret).build().parseSignedClaims(token).getPayload();
-        }
-        catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
+        return Jwts.parser().verifyWith(secret).build().parseSignedClaims(token).getPayload();
+
     }
 
     public String getUsername(String token) {
@@ -59,7 +56,19 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+        try {
+            extractClaims(token);
+            return true;
+        }
+        catch (MalformedJwtException e) {
+            System.out.println("token malformed");
+        }
+        catch (ExpiredJwtException e) {
+            System.out.println("token expired");
+        }
+
+
+        return false;
     }
 
 //    public String createJwt(String username, String email, String role, Long expiredMs) {

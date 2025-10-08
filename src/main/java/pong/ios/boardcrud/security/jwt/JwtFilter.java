@@ -30,31 +30,19 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // request 에서 Authorization 헤더를 찾음
-        String accessToken = request.getHeader("access");
-        // Authorization 헤더 검증
-        if ( accessToken == null ) {
+        String accessToken = request.getHeader("Authorization");
+        String token = resolveToken(accessToken);
 
-            filterChain.doFilter(request, response);
-
-            return;
-        }
-
-        // 토큰 만료 확인 여부
-        if (jwtUtil.validateToken(accessToken))
+        // Authorization 헤더 검증 및 토큰 만료 확인 여부
+        if (!validateToken(token))
         {
-            // response body
-            PrintWriter writer = response.getWriter();
-            writer.print("access token expired");
-
-            // status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            filterChain.doFilter(request, response);
             return;
         }
 
         // 토큰에서 username과 role
-        String username = jwtUtil.getUsername(accessToken);
-        String role = jwtUtil.getRole(accessToken);
+        String username = jwtUtil.getUsername(token);
+        String role = jwtUtil.getRole(token);
 
         // userEntity를 생성하여 설정
         UserEntity userEntity = UserEntity.builder()
@@ -74,6 +62,21 @@ public class JwtFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
 
+    }
 
+    private String resolveToken(String accessToken) {
+        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
+            return null;
+        }
+
+        return accessToken.substring(7);
+    }
+
+    private boolean validateToken(String accessToken) {
+        if (accessToken == null) {
+            return false;
+        }
+
+        return jwtUtil.validateToken(accessToken);
     }
 }
