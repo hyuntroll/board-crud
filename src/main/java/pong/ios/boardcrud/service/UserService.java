@@ -1,6 +1,8 @@
 package pong.ios.boardcrud.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pong.ios.boardcrud.domain.entity.follow.Follow;
@@ -12,6 +14,7 @@ import pong.ios.boardcrud.repository.FollowRepository;
 import pong.ios.boardcrud.repository.UserRepository;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,23 +26,46 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final RedisService redisService;
+
+    private final MailService mailService;
+
+    private int mailTimeout = 600000;
+
     public boolean singUp(JoinRequest joinRequest) {
         String username = joinRequest.getUsername();
-        String password = joinRequest.getPassword();
         String email = joinRequest.getEmail();
+        joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
 
         if (userRepository.existsByUsername(username) ||
             userRepository.existsByEmail(username)) { return false; }
 
-        UserEntity user = UserEntity.builder()
-                .username(username)
-                .password((bCryptPasswordEncoder.encode(password)))
-                .email(email)
-                .role("ROLE_USER")
-                .build();
+        redisService.saveTempUser(joinRequest, mailTimeout);
+        mailService.sendVerificationEmail(email);
 
-        userRepository.save(user);
         return true;
+    }
+
+    public boolean verifyEmail(String email, String code) {
+        if (!redisService.verifyEmailCode(email, code)) return false;
+
+        Optional<JoinRequest> optionalDto = redisService.findTempUser(email);
+        if (optionalDto.isPresent()) {
+            JoinRequest joinRequest = optionalDto.get();
+            UserEntity user = UserEntity.builder()
+                    .username(joinRequest.getUsername())
+                    .password(joinRequest.getPassword())
+                    .email(joinRequest.getEmail())
+                    .role("ROLE_USER")
+                    .build();
+            userRepository.save(user);
+
+            redisService.deleteVerifyEmail(email);
+            redisService.deleteTempUser(joinRequest);
+            return true;
+        }
+
+        return false;
     }
 
     public UserResponse findByUsername(String username) throws NoSuchElementException {

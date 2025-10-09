@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pong.ios.boardcrud.service.ReissueService;
 
+import java.io.IOException;
+
 //@Controller
 //@ResponseBody
 @RestController
@@ -17,7 +19,7 @@ public class ReissueController {
     private final ReissueService reissueService;
 
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return reissueService.reissue(request, response);
     }
 

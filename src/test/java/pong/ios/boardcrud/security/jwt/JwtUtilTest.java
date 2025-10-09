@@ -17,7 +17,7 @@ class JwtUtilTest {
     public void testTokenExpired() {
         String test = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuLiOyWvOq1tCIsImVtYWlsIjoiaHNtMjAwOTA1MjkyMUBkZ3N3LmhzLmtyMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NTgxMDY4MTUsImV4cCI6MTc1ODEwNjg1MX0.qfzS0fWphyIG7mtXEs8ziBaU2B7TgLBQZq7YZ9qSXZE";
 
-        assertTrue(jwtUtil.isExpired(test));
+        assertTrue(jwtUtil.validateToken(test));
     }
 
     @Test

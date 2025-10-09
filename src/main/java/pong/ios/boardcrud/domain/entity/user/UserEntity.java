@@ -30,12 +30,11 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String password;
 
-    @Column()
+    @Column
     private String role;
 
     @Column(name="u_email", nullable = false, unique = true)
     private String email;
-
 
     @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();

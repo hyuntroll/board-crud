@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.GenericFilterBean;
 import pong.ios.boardcrud.service.RedisService;
+import pong.ios.boardcrud.util.CookieUtil;
 
 import java.io.IOException;
 
@@ -47,15 +48,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         //get refresh token
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-
-            if (cookie.getName().equals("refresh")) {
-
-                refresh = cookie.getValue();
-            }
-        }
+        String refresh = CookieUtil.getCookie(request, "refresh");
 
         //refresh null check
         if (refresh == null) {

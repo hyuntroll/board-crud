@@ -1,6 +1,7 @@
 package pong.ios.boardcrud.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import pong.ios.boardcrud.security.jwt.JwtUtil;
 import pong.ios.boardcrud.util.CookieUtil;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class ReissueService {
@@ -23,14 +28,9 @@ public class ReissueService {
 
     private final RedisService redisService;
 
-    @Value("${spring.jwt.expiration.refresh}")
-    private Long refreshExpiredMs;
+    private final ObjectMapper objectMapper;
 
-    @Value("${spring.jwt.expiration.access}")
-    private Long accessExpiredMs;
-
-
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String refresh = CookieUtil.getCookie(request, "refresh");
         if (refresh == null) {
@@ -52,36 +52,24 @@ public class ReissueService {
         String username  = jwtUtil.getUsername(refresh);
         String role = jwtUtil.getRole(refresh);
 
-        String access = jwtUtil.createJwt("access", username, role, 1200000L);
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, 18000000L);
+        String access = jwtUtil.createJwt("access", username, role, jwtUtil.accessExpiration);
+        String newRefresh = jwtUtil.createJwt("refresh", username, role, jwtUtil.refreshExpiration);
 
         redisService.deleteToken(refresh);
-        redisService.saveToken(username, newRefresh, 18000000L);
+        redisService.saveToken(username, newRefresh, jwtUtil.refreshExpiration);
 
-        response.setHeader("access", access);
-        response.addCookie(createCookie("refresh",  newRefresh));
+        Map<String, Object> map = new HashMap<>();
+        map.put("access_token", access);
+        map.put("token_type", "Bearer");
+        map.put("expire_in", jwtUtil.accessExpiration / 1000);
+        CookieUtil.createCookie(response, "refresh", newRefresh, 60 * 60 * 24 * 3600);
+
+        objectMapper.writeValue(response.getWriter(), map);
 
 
         return ResponseEntity.ok().build();
     }
 
-    public Cookie createCookie(String name, String value) {
-
-        Cookie cookie = new Cookie(name, value);
-        cookie.setMaxAge(10);
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
-
-    private void addRefreshEntity(String username, String refresh, Long expireMs) {
-
-        RefreshToken refreshEntity = new RefreshToken(username, refresh, expireMs);
-
-        redisService.saveToken(refreshEntity);
-
-
-    }
 
 }
 
