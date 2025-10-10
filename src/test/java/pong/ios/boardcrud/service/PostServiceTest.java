@@ -4,15 +4,13 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pong.ios.boardcrud.domain.entity.comment.Comment;
-import pong.ios.boardcrud.domain.entity.post.Post;
-import pong.ios.boardcrud.domain.entity.user.UserEntity;
-import pong.ios.boardcrud.repository.CommentRepository;
-import pong.ios.boardcrud.repository.LikeRepository;
-import pong.ios.boardcrud.repository.PostRepository;
-import pong.ios.boardcrud.repository.UserRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
+import pong.ios.boardcrud.domain.post.service.PostService;
+import pong.ios.boardcrud.domain_1.entity.comment.Comment;
+import pong.ios.boardcrud.domain.post.domain.Post;
+import pong.ios.boardcrud.domain.user.domain.UserEntity;
+import pong.ios.boardcrud.global.auth.repository.CommentRepository;
+import pong.ios.boardcrud.domain.post.repository.PostRepository;
+import pong.ios.boardcrud.domain.user.repository.UserRepository;
 
 @SpringBootTest
 class PostServiceTest {

@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pong.ios.boardcrud.dto.like.LikeResponse;
-import pong.ios.boardcrud.service.PostService;
+import pong.ios.boardcrud.domain.like.dto.LikeResponse;
+import pong.ios.boardcrud.domain.post.service.PostService;
 
 import java.util.NoSuchElementException;
 

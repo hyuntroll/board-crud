@@ -4,8 +4,10 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pong.ios.boardcrud.domain.entity.post.Post;
-import pong.ios.boardcrud.domain.entity.user.UserEntity;
+import pong.ios.boardcrud.domain.post.domain.Post;
+import pong.ios.boardcrud.domain.user.domain.UserEntity;
+import pong.ios.boardcrud.domain.post.repository.PostRepository;
+import pong.ios.boardcrud.domain.user.repository.UserRepository;
 
 
 @SpringBootTest

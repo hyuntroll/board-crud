@@ -3,13 +3,11 @@ package pong.ios.boardcrud.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
-import pong.ios.boardcrud.dto.join.JoinRequest;
+import pong.ios.boardcrud.global.auth.refresh.RefreshToken;
+import pong.ios.boardcrud.global.auth.dto.JoinRequest;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;

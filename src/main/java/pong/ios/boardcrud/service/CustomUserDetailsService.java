@@ -4,9 +4,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pong.ios.boardcrud.domain.entity.user.UserEntity;
-import pong.ios.boardcrud.dto.user.CustomUserDetails;
-import pong.ios.boardcrud.repository.UserRepository;
+import pong.ios.boardcrud.domain.user.domain.UserEntity;
+import pong.ios.boardcrud.global.auth.domain.CustomUserDetails;
+import pong.ios.boardcrud.domain.user.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

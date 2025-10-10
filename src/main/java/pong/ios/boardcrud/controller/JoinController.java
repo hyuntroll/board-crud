@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pong.ios.boardcrud.dto.join.JoinRequest;
-import pong.ios.boardcrud.service.UserService;
+import pong.ios.boardcrud.global.auth.dto.JoinRequest;
+import pong.ios.boardcrud.domain.user.serivce.UserService;
 
 @RequiredArgsConstructor
 @Controller

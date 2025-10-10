@@ -1,21 +1,18 @@
 package pong.ios.boardcrud.security.jwt;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pong.ios.boardcrud.domain.entity.user.UserEntity;
-import pong.ios.boardcrud.dto.user.CustomUserDetails;
+import pong.ios.boardcrud.domain.user.domain.UserEntity;
+import pong.ios.boardcrud.global.auth.domain.CustomUserDetails;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {

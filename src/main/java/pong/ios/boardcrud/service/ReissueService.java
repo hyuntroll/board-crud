@@ -3,16 +3,12 @@ package pong.ios.boardcrud.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pong.ios.boardcrud.domain.entity.refresh.RefreshToken;
-import pong.ios.boardcrud.security.jwt.JwtUtil;
-import org.springframework.beans.factory.annotation.Value;
 import pong.ios.boardcrud.security.jwt.JwtUtil;
 import pong.ios.boardcrud.util.CookieUtil;
 
