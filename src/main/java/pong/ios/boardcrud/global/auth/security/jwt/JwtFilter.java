@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.security.jwt;
+package pong.ios.boardcrud.global.auth.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

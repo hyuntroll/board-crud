@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.service;
+package pong.ios.boardcrud.global.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pong.ios.boardcrud.security.jwt.JwtUtil;
-import pong.ios.boardcrud.util.CookieUtil;
+import pong.ios.boardcrud.global.auth.security.jwt.JwtUtil;
+import pong.ios.boardcrud.global.util.CookieUtil;
 
 import java.io.IOException;
 import java.util.HashMap;

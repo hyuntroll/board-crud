@@ -1,10 +1,10 @@
-package pong.ios.boardcrud.global.auth.repository;
+package pong.ios.boardcrud.domain.follow.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pong.ios.boardcrud.domain_1.entity.follow.Follow;
-import pong.ios.boardcrud.domain_1.entity.follow.FollowId;
+import pong.ios.boardcrud.domain.follow.domain.Follow;
+import pong.ios.boardcrud.domain.follow.domain.FollowId;
 import pong.ios.boardcrud.domain.user.domain.UserEntity;
 
 

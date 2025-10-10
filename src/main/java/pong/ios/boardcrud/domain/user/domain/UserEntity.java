@@ -4,7 +4,7 @@ package pong.ios.boardcrud.domain.user.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import pong.ios.boardcrud.domain_1.entity.comment.Comment;
-import pong.ios.boardcrud.domain_1.entity.like.Like;
+import pong.ios.boardcrud.domain.like.domain.Like;
 import pong.ios.boardcrud.domain.post.domain.Post;
 
 import java.io.Serializable;

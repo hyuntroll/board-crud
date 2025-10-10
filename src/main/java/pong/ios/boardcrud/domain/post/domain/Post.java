@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pong.ios.boardcrud.domain_1.entity.comment.Comment;
-import pong.ios.boardcrud.domain_1.entity.like.Like;
+import pong.ios.boardcrud.domain.like.domain.Like;
 import pong.ios.boardcrud.domain.user.domain.UserEntity;
 
 import java.util.ArrayList;

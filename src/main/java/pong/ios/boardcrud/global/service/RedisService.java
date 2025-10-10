@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.service;
+package pong.ios.boardcrud.global.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

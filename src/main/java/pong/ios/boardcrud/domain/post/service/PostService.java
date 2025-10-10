@@ -3,14 +3,14 @@ package pong.ios.boardcrud.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pong.ios.boardcrud.domain_1.entity.like.Like;
-import pong.ios.boardcrud.domain_1.entity.like.LikeId;
+import pong.ios.boardcrud.domain.like.domain.Like;
+import pong.ios.boardcrud.domain.like.domain.LikeId;
 import pong.ios.boardcrud.domain.post.domain.Post;
 import pong.ios.boardcrud.domain.user.domain.UserEntity;
 import pong.ios.boardcrud.domain.like.dto.LikeResponse;
 import pong.ios.boardcrud.domain.post.dto.PostRequest;
 import pong.ios.boardcrud.domain.post.dto.PostResponse;
-import pong.ios.boardcrud.global.auth.repository.LikeRepository;
+import pong.ios.boardcrud.domain.like.repository.LikeRepository;
 import pong.ios.boardcrud.domain.post.repository.PostRepository;
 import pong.ios.boardcrud.domain.user.repository.UserRepository;
 

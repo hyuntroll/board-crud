@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.util;
+package pong.ios.boardcrud.global.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

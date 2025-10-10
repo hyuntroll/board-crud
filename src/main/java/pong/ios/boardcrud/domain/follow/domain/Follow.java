@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.domain_1.entity.follow;
+package pong.ios.boardcrud.domain.follow.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

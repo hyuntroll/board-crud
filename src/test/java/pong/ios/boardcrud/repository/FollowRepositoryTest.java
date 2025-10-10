@@ -3,10 +3,10 @@ package pong.ios.boardcrud.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pong.ios.boardcrud.domain_1.entity.follow.Follow;
-import pong.ios.boardcrud.domain_1.entity.follow.FollowId;
+import pong.ios.boardcrud.domain.follow.domain.Follow;
+import pong.ios.boardcrud.domain.follow.domain.FollowId;
 import pong.ios.boardcrud.domain.user.domain.UserEntity;
-import pong.ios.boardcrud.global.auth.repository.FollowRepository;
+import pong.ios.boardcrud.domain.follow.repository.FollowRepository;
 import pong.ios.boardcrud.domain.user.repository.UserRepository;
 
 @SpringBootTest

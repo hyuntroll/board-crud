@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.domain_1.entity.like;
+package pong.ios.boardcrud.domain.like.domain;
 
 
 import jakarta.persistence.*;

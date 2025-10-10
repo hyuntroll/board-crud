@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.service;
+package pong.ios.boardcrud.global.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.controller;
+package pong.ios.boardcrud.global.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pong.ios.boardcrud.service.ReissueService;
+import pong.ios.boardcrud.global.service.ReissueService;
 
 import java.io.IOException;
 

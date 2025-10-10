@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.controller;
+package pong.ios.boardcrud.domain.like.controller;
 
 
 import lombok.RequiredArgsConstructor;

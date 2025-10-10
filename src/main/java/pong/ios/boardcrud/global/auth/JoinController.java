@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.controller;
+package pong.ios.boardcrud.global.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
