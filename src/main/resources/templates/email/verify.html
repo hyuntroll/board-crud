@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>회원가입 인증 코드</title>
+    <style>
+        /* 이메일 클라이언트 호환용 간단 인라인 스타일 권장 (여기선 예제로 head에 포함) */
+        body { margin:0; padding:0; background-color:#f4f6f8; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif; color:#111; }
+        .container { width:100%; max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(20,20,20,0.08); }
+        .header { padding:24px; text-align:center; background: linear-gradient(90deg,#4f46e5,#06b6d4); color:white; }
+        .logo { font-weight:700; font-size:20px; letter-spacing:0.4px; }
+        .content { padding:28px; }
+        .greeting { font-size:16px; margin-bottom:12px; }
+        .desc { font-size:14px; color:#555; margin-bottom:20px; line-height:1.5; }
+        .code-box { display:flex; align-items:center; justify-content:center; padding:18px; border-radius:6px; background:#f7fbff; border:1px dashed #dbeafe; font-size:28px; font-weight:700; letter-spacing:4px; margin:16px 0; }
+        .btn { display:inline-block; text-decoration:none; padding:12px 18px; border-radius:6px; background:#4f46e5; color:white; font-weight:600; margin-top:8px; }
+        .small { font-size:12px; color:#888; margin-top:16px; }
+        .footer { padding:18px; font-size:12px; color:#9aa; text-align:center; background:#fbfcfd; }
+        @media screen and (max-width:420px) {
+            .code-box { font-size:22px; padding:14px; }
+            .content { padding:18px; }
+        }
+        /* preheader 숨김 (이메일 미리보기용) */
+        .preheader { display:none !important; visibility:hidden; opacity:0; color:transparent; height:0; width:0; }
+    </style>
+</head>
+<body>
+<!-- 미리보기 텍스트(메일 클라이언트의 요약에 표시됨) -->
+<div class="preheader" th:text="'[' + ${name} + '] 님을 위한 회원가입 인증 코드입니다. ' + ${code}">회원가입 인증 코드입니다.</div>
+
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    <tr>
+        <td align="center" style="padding:24px;">
+            <div class="container" role="article" aria-label="회원가입 인증 이메일">
+                <div class="header">
+                    <div class="logo" th:text="${appName} ?: 'MyApp'">MyApp</div>
+                </div>
+
+                <div class="content">
+                    <div class="greeting">
+                        <span th:text="${name} ?: '사용자'">사용자</span>님, 안녕하세요 👋
+                    </div>
+
+                    <div class="desc">
+                        회원가입을 완료하려면 아래 인증 코드를 입력하세요. 인증 코드는 <strong th:text="${expiryMinutes} + '분'">10분</strong>간 유효합니다.
+                    </div>
+
+                    <div class="code-box" th:text="${code}">123456</div>
+
+                    <div style="text-align:center;">
+                        <a th:if="${actionUrl}" th:href="${actionUrl}" class="btn" th:text="'인증 완료하기'">인증 완료하기</a>
+                    </div>
+
+                    <div class="small">
+                        인증 버튼을 못 누르시면 사이트의 회원가입 화면에서 직접 코드를 입력하시면 됩니다.
+                    </div>
+
+                    <div style="margin-top:18px;font-size:13px;color:#666;line-height:1.4;">
+                        <div><strong>보안 안내:</strong> 어떤 이유로든 타인에게 코드를 공유하지 마세요.</div>
+                        <div th:if="${supportEmail}" style="margin-top:8px;">문의: <a th:href="'mailto:' + ${supportEmail}" th:text="${supportEmail}">support@example.com</a></div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    © <span th:text="${year}">2025</span> <span th:text="${appName} ?: 'MyApp'">MyApp</span>. All rights reserved.
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

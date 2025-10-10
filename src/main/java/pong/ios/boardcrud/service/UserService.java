@@ -1,5 +1,6 @@
 package pong.ios.boardcrud.service;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,10 +39,15 @@ public class UserService {
         joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
 
         if (userRepository.existsByUsername(username) ||
-            userRepository.existsByEmail(username)) { return false; }
+            userRepository.existsByEmail(email)) { return false; }
 
         redisService.saveTempUser(joinRequest, mailTimeout);
-        mailService.sendVerificationEmail(email);
+        try {
+            mailService.sendVerificationEmail(email);
+        }
+        catch ( MessagingException e) {
+            throw new RuntimeException(e);
+        }
 
         return true;
     }
