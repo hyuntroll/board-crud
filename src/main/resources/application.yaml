@@ -1,12 +1,18 @@
 spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+
+
   application:
     name: Board-CRUD
+
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/bootex
-    username: bootuser
-    password: Bootuser123!@#
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -17,12 +23,26 @@ spring:
     show-sql: false
 
   jwt:
-    secret: "q34sdfjaowerlk`21k2re!@#$qfquakld23848234wfnwerhwer8wer8234hqhr/234we23r19wefwber23bfwvgwer9@#Rnf13 4aodg7q@#%9afug23@#$Wefiaerh2345@3"
+    secret: ${JWT_SECRET_KEY}
     expiration:
       refresh: 18000000
       access: 1200000
 
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true

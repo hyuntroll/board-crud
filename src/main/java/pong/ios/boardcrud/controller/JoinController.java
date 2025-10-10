@@ -27,7 +27,7 @@ public class JoinController {
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyEmail(@RequestParam String email, @RequestParam String code) {
-        if (userService.verifyEmail(email, code)) {
+        if (userService.verifyEmail(email, code.toUpperCase())) {
             return ResponseEntity.ok("회원가입 성공");
         }
         else {
