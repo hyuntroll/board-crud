@@ -23,14 +23,15 @@ public class PostResponse {
 
     private List<CommentResponse> comments;
 
-    private int likes;
+    private int likeCount;
 
-    public PostResponse(Post post, int likes) {
+
+    public PostResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.writer = post.getWriter().getUsername();
-        this.likes = likes;
+        this.likeCount = post.getLikes().size();
 
         this.comments = post.getComments().stream()
                 .map(CommentResponse::new)

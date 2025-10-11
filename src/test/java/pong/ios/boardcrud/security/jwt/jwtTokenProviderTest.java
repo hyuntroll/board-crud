@@ -3,7 +3,7 @@ package pong.ios.boardcrud.security.jwt;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pong.ios.boardcrud.global.auth.security.jwt.JwtTokenProvider;
+import pong.ios.boardcrud.global.security.auth.jwt.JwtTokenProvider;
 
 @SpringBootTest
 class jwtTokenProviderTest {

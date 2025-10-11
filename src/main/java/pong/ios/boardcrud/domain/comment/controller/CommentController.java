@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.controller;
+package pong.ios.boardcrud.domain.comment.controller;
 
 
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pong.ios.boardcrud.dto.comment.CommentRequest;
 import pong.ios.boardcrud.dto.comment.CommentResponse;
-import pong.ios.boardcrud.service.CommentService;
+import pong.ios.boardcrud.domain.comment.service.CommentService;
 
 import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;

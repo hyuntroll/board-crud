@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.service;
+package pong.ios.boardcrud.domain.comment.service;
 
 
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class CommentService {
         if (postOptional.isEmpty()) {
             throw new NoSuchElementException("post not found");
         }
-        UserEntity user = userRepository.findByUsername(username);
+        UserEntity user = userRepository.findByUsername(username).get();
         Post post = postOptional.get();
 
 

@@ -1,18 +1,10 @@
 package pong.ios.boardcrud.domain.user.serivce;
 
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pong.ios.boardcrud.domain.follow.domain.Follow;
-import pong.ios.boardcrud.domain.follow.domain.FollowId;
 import pong.ios.boardcrud.domain.user.domain.UserEntity;
-import pong.ios.boardcrud.global.auth.dto.JoinRequest;
 import pong.ios.boardcrud.domain.user.dto.UserResponse;
-import pong.ios.boardcrud.domain.follow.repository.FollowRepository;
 import pong.ios.boardcrud.domain.user.repository.UserRepository;
-import pong.ios.boardcrud.global.service.MailService;
-import pong.ios.boardcrud.global.service.RedisService;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -23,106 +15,17 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final FollowRepository followRepository;
-
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    private final RedisService redisService;
-
-    private final MailService mailService;
-
-    private int mailTimeout = 600000;
-
-    public boolean singUp(JoinRequest joinRequest) {
-        String username = joinRequest.getUsername();
-        String email = joinRequest.getEmail();
-        joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
-
-        if (userRepository.existsByUsername(username) ||
-            userRepository.existsByEmail(email)) { return false; }
-
-        redisService.saveTempUser(joinRequest, mailTimeout);
-        try {
-            mailService.sendVerificationEmail(email);
-        }
-        catch ( MessagingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return true;
-    }
-
-    public boolean verifyEmail(String email, String code) {
-        if (!redisService.verifyEmailCode(email, code)) return false;
-
-        Optional<JoinRequest> optionalDto = redisService.findTempUser(email);
-        if (optionalDto.isPresent()) {
-            JoinRequest joinRequest = optionalDto.get();
-            UserEntity user = UserEntity.builder()
-                    .username(joinRequest.getUsername())
-                    .password(joinRequest.getPassword())
-                    .email(joinRequest.getEmail())
-                    .role("ROLE_USER")
-                    .build();
-            userRepository.save(user);
-
-            redisService.deleteVerifyEmail(email);
-            redisService.deleteTempUser(joinRequest);
-            return true;
-        }
-
-        return false;
-    }
-
     public UserResponse findByUsername(String username) throws NoSuchElementException {
 
-        UserEntity user = userRepository.findByUsername(username);
+        Optional<UserEntity> user = userRepository.findByUsername(username);
 
-        if (user == null) { throw new NoSuchElementException("User not found"); }
+        if (user.isEmpty()) { throw new NoSuchElementException("User not found"); }
 
-        return new UserResponse(user);
-
-    }
-
-    public void follow(String follower, String followee) throws NoSuchElementException, IllegalArgumentException {
-
-        if (follower.equals(followee)) {
-            throw new IllegalArgumentException("Follower and Followee cannot be the same");
-        }
-
-        UserEntity followerEntity = userRepository.findByUsername(follower);
-        UserEntity followeeEntity = userRepository.findByUsername(followee);
-
-        if (followerEntity == null || followeeEntity == null) {
-            throw new NoSuchElementException("Follower or followee not found");
-        }
-
-        FollowId id =  new FollowId(followerEntity.getId(), followeeEntity.getId());
-        if (!followRepository.existsById(id)) {
-            followRepository.save(new Follow(id, followerEntity, followeeEntity));
-        }
+        return new UserResponse(user.get());
 
     }
 
-    public void unfollow(String follower, String followee) throws NoSuchElementException, IllegalArgumentException {
 
-        if (follower.equals(followee)) {
-            throw new IllegalArgumentException("Follower and Followee cannot be the same");
-        }
-
-        UserEntity followerEntity = userRepository.findByUsername(follower);
-        UserEntity followeeEntity = userRepository.findByUsername(followee);
-
-        if (followerEntity == null || followeeEntity == null) {
-            throw new NoSuchElementException("Follower or followee not found");
-        }
-
-        FollowId id =  new FollowId(followerEntity.getId(), followeeEntity.getId());
-        if (followRepository.existsById(id)) {
-            followRepository.deleteById(id);
-        }
-
-    }
 
 
 }

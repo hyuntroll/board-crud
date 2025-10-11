@@ -30,7 +30,7 @@ class PostServiceTest {
 
     @Test
     void addComment() {
-        UserEntity user = userRepository.findByUsername("니얼굴");
+        UserEntity user = userRepository.findByUsername("니얼굴").get();
         Post post = postRepository.findById(2L).get();
         Comment comment = new Comment("이건 좀", user, post);
         post.getComments().add(comment);
@@ -49,16 +49,7 @@ class PostServiceTest {
         }
     }
 
-
-    @Test
-    void testLike() {
-
-        System.out.println(postService.countPostLike(5L));
-        System.out.println(postService.countPostLike(2L));
-        System.out.println(postService.countPostLike(3L));
-
-    }
-
+/*
     @Test
     void LikePost() {
 
@@ -76,4 +67,13 @@ class PostServiceTest {
 
     }
 
+    @Test
+    void testLike() {
+
+        System.out.println(postService.countPostLike(5L));
+        System.out.println(postService.countPostLike(2L));
+        System.out.println(postService.countPostLike(3L));
+
+    }
+*/
 }

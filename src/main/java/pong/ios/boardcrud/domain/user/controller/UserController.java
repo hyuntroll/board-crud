@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pong.ios.boardcrud.domain.follow.service.FollowService;
 import pong.ios.boardcrud.domain.user.dto.UserResponse;
 import pong.ios.boardcrud.domain.user.serivce.UserService;
 
@@ -18,6 +19,7 @@ import java.util.NoSuchElementException;
 public class UserController {
 
     private final UserService userService;
+    private final FollowService followService;
 
     @GetMapping
     public String hello() {
@@ -39,7 +41,7 @@ public class UserController {
     public ResponseEntity<Void> follow(@PathVariable(name = "username") String followingName) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            userService.follow(username, followingName);
+            followService.follow(username, followingName);
             return ResponseEntity.ok().build();
         }
         catch (NoSuchElementException e) {
@@ -54,7 +56,7 @@ public class UserController {
     public ResponseEntity<Void> unfollow(@PathVariable(name = "username") String followingName) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            userService.unfollow(username, followingName);
+            followService.unfollow(username, followingName);
             return ResponseEntity.ok().build();
         }
         catch (NoSuchElementException e) {
