@@ -31,12 +31,9 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-
     private final JwtUtil jwtUtil;
-
     private final RedisService redisService;
-
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
 
 
     @Bean
@@ -144,7 +141,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
         // 필터 등록
         http
-                .addFilterAt(new JwtLoginFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, redisService, objectMapper(), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new JwtLoginFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisService), LogoutFilter.class);
         //세션 설정
