@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.domain_1.entity.comment;
+package pong.ios.boardcrud.domain.entity.comment;
 
 
 import jakarta.persistence.*;
