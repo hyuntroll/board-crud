@@ -26,6 +26,16 @@ public class JwtProvider {
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
 
+    public Long getUserId(String token) {
+        Claims claims = getClaims(token);
+        return Long.parseLong(claims.getSubject());
+    }
+
+    public UserRoleType getUserRole(String token) {
+        Claims claims = getClaims(token);
+        return UserRoleType.valueOf(claims.get("authority", String.class));
+    }
+
     public Claims getClaims(String token) {
         try {
             return Jwts.parser()
@@ -58,19 +68,18 @@ public class JwtProvider {
                 .signWith(key, Jwts.SIG.HS256);
     }
 
-    public String generateAccessToken(Long id, long userId, UserRoleType role) {
+    public String generateAccessToken(Long id, UserRoleType role) {
         return getJwtsBuilder(
                     TokenType.ACCESS,
                     id.toString(),
                     jwtProperties.getAccessExpiration()
                 )
                 .claim("authority", role.name())
-                .claim("userId", userId)
                 .compact();
 
     }
 
-    public String generateRefreshToken(String id) {
+    public String generateRefreshToken(Long id) {
         return getJwtsBuilder(
                 TokenType.REFRESH,
                 id.toString(),

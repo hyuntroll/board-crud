@@ -29,6 +29,12 @@ public class UserPersistenceAdapter implements SaveUserPort, LoadUserPort {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .map(userMapper::toDomain);
+    }
+
+    @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
