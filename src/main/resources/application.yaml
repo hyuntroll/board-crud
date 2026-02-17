@@ -1,29 +1,6 @@
 spring:
-  config:
-    import:
-      - optional:file:.env[.properties]
-
-
   application:
-    name: Board-CRUD
-
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope:
-              - profile
-              - email
-
-
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bootex
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASSWORD}
+    name: board-crud
 
   jpa:
     hibernate:
@@ -31,29 +8,51 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    show-sql: false
+        show-sql: false
+    open-in-view: false
+    defer-datasource-initialization: true
 
   jwt:
-    secret: ${JWT_SECRET_KEY}
-    expiration:
-      refresh: 18000000
-      access: 1200000
+    secret-key: ${JWT_SECRET_KEY:?JWT_SECRET_KEY missing}
+    access-expiration: 2592000000
+    refresh-expiration: 2592000000
+
+  datasource:
+    url: ${DB_URL:?DB_URL missing}
+    username: ${DB_USERNAME:?DB_USERNAME missing}
+    password: ${DB_PASSWORD:?DB_PASSWORD missing}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+      host: ${REDIS_URL:?REDIS_URL missing}
+      port: ${REDIS_PORT:?REDIS_PORT missing}
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-
+    username: ${EMAIL_ADDRESS:?EMAIL_ADDRESS}
+    password: ${EMAIL_PASSWORD:?EMAIL_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
-          timeout: 5000
           starttls:
             enable: true
+            required: true
+  config:
+    activate:
+      on-profile: default
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.springframework.jdbc.datasource.init: DEBUG
+    org.springframework.jdbc: DEBUG
+
+#server:
+#  forward-headers-strategy: framework
+#  tomcat:
+#    remoteip:
+#      remote-ip-header: x-forwarded-for
+#      protocol-header: x-forwarded-proto
