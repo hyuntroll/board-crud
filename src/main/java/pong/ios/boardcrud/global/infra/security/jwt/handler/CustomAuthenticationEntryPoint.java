@@ -8,12 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import pong.ios.boardcrud.global.error.ErrorResponse;
+import pong.ios.boardcrud.global.exception.ErrorResponse;
 import pong.ios.boardcrud.global.util.ApiResponseWriter;
 
 import java.io.IOException;
 
-import static pong.ios.boardcrud.global.error.CommonStatusCode.UNAUTHORIZED;
+import static pong.ios.boardcrud.global.exception.CommonStatusCode.UNAUTHORIZED;
 
 
 @Component

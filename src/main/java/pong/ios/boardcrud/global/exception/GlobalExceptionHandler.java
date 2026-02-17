@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.global.error;
+package pong.ios.boardcrud.global.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

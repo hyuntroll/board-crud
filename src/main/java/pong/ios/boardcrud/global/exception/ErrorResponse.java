@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.global.error;
+package pong.ios.boardcrud.global.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

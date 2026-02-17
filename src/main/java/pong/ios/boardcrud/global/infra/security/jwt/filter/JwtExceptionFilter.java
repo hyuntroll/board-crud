@@ -8,14 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pong.ios.boardcrud.global.error.ApplicationException;
-import pong.ios.boardcrud.global.error.ErrorResponse;
-import pong.ios.boardcrud.global.error.StatusCode;
+import pong.ios.boardcrud.global.exception.ApplicationException;
+import pong.ios.boardcrud.global.exception.ErrorResponse;
+import pong.ios.boardcrud.global.exception.StatusCode;
 import pong.ios.boardcrud.global.util.ApiResponseWriter;
 
 import java.io.IOException;
 
-import static pong.ios.boardcrud.global.error.CommonStatusCode.INTERNAL_SERVER_ERROR;
+import static pong.ios.boardcrud.global.exception.CommonStatusCode.INTERNAL_SERVER_ERROR;
 
 
 @Slf4j

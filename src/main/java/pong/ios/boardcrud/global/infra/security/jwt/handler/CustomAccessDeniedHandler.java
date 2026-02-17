@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
-import pong.ios.boardcrud.global.error.ErrorResponse;
+import pong.ios.boardcrud.global.exception.ErrorResponse;
 import pong.ios.boardcrud.global.util.ApiResponseWriter;
 
 import java.io.IOException;
 
-import static pong.ios.boardcrud.global.error.CommonStatusCode.ACCESS_DENIED;
+import static pong.ios.boardcrud.global.exception.CommonStatusCode.ACCESS_DENIED;
 
 
 @Component

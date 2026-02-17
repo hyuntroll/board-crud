@@ -1,10 +1,10 @@
-package pong.ios.boardcrud.global.infra.security.jwt.error;
+package pong.ios.boardcrud.global.infra.security.jwt.exception;
 
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import pong.ios.boardcrud.global.error.StatusCode;
+import pong.ios.boardcrud.global.exception.StatusCode;
 
 @Getter
 @RequiredArgsConstructor

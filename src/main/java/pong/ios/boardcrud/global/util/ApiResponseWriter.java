@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import pong.ios.boardcrud.global.data.BaseResponse;
-import pong.ios.boardcrud.global.error.ErrorResponse;
+import pong.ios.boardcrud.global.exception.ErrorResponse;
 
 import java.io.IOException;
 

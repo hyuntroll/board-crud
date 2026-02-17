@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.global.error;
+package pong.ios.boardcrud.global.exception;
 
 import org.springframework.http.HttpStatus;
 
