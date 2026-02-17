@@ -9,7 +9,8 @@ import pong.ios.boardcrud.global.exception.StatusCode;
 @Getter
 @RequiredArgsConstructor
 public enum JwtStatusCode implements StatusCode {
-    EXPIRED_TOKEN("만료된 토큰입니다.", HttpStatus.UNAUTHORIZED);
+    EXPIRED_TOKEN("만료된 토큰입니다.", HttpStatus.UNAUTHORIZED),
+    INVALID_TOKEN("잘못된 JWT 토큰입니다.", HttpStatus.UNAUTHORIZED),;
 
     private final String message;
     private final HttpStatus httpStatus;
