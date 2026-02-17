@@ -13,7 +13,8 @@ public enum CommonStatusCode implements StatusCode {
     METHOD_NOT_ALLOWED("허용되지 않은 메서드입니다", HttpStatus.METHOD_NOT_ALLOWED),
     UNAUTHORIZED("인증이 필요합니다", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("권한이 없습니다", HttpStatus.FORBIDDEN),
-    TOO_MANY_REQUEST("너무 많은 요청이 들어왔습니다", HttpStatus.TOO_MANY_REQUESTS);
+    TOO_MANY_REQUEST("너무 많은 요청이 들어왔습니다", HttpStatus.TOO_MANY_REQUESTS),
+    ACCESS_DENIED("접근이 거부되었습니다.", HttpStatus.FORBIDDEN);
 
 
     private final String message;
