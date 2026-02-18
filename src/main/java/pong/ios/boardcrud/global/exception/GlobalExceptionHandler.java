@@ -3,6 +3,7 @@ package pong.ios.boardcrud.global.exception;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -31,6 +32,19 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(statusCode.getHttpStatus())
+                .body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        ErrorResponse error = ErrorResponse.of(
+                CommonStatusCode.INVALID_ARGUMENT.getHttpStatus().value(),
+                CommonStatusCode.INVALID_ARGUMENT.name(),
+                "요청 값이 유효하지 않습니다"
+        );
+
+        return ResponseEntity
+                .status(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus())
                 .body(error);
     }
 

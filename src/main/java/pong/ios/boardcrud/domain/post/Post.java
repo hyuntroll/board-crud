@@ -6,26 +6,41 @@ import pong.ios.boardcrud.domain.board.Board;
 import pong.ios.boardcrud.domain.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Builder
 public class Post {
-    private final Long id;
-    private final User user;
-    private final Board board;
-    private final String title;
-    private final String content;
-    private final String category;
-    private final List<String> tags;
-    private final PostStatus status;
-    private final boolean isPinned;
-    private final LocalDateTime pinnedAt;
-    private final User pinnedBy;
-    private final int viewCount;
-    private final int likeCount;
-    private final int commentCount;
-    private final LocalDateTime deletedAt;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private Long id;
+    private User user;
+    private Board board;
+    private String title;
+    private String content;
+    private String category;
+    private List<String> tags;
+    private PostStatus status;
+    private boolean isPinned;
+    private LocalDateTime pinnedAt;
+    private User pinnedBy;
+    private int viewCount;
+    private int likeCount;
+    private int commentCount;
+    private LocalDateTime deletedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public void updateEditableFields(String title, String content, String category, List<String> tags, LocalDateTime updatedAt) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.tags = tags == null ? List.of() : new ArrayList<>(tags);
+        this.updatedAt = updatedAt;
+    }
+
+    public void softDelete(LocalDateTime deletedAt, LocalDateTime updatedAt) {
+        this.status = PostStatus.DELETED;
+        this.deletedAt = deletedAt;
+        this.updatedAt = updatedAt;
+    }
 }

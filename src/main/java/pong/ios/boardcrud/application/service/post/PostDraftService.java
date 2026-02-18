@@ -51,17 +51,21 @@ public class PostDraftService implements
                 : getMyDraft(command.draftId());
 
         LocalDateTime now = LocalDateTime.now();
-        PostDraft saved = savePostDraftPort.save(
-                PostDraft.builder()
-                        .id(command.draftId())
-                        .user(user)
-                        .board(board)
-                        .title(command.title())
-                        .content(command.content())
-                        .savedAt(now)
-                        .createdAt(baseDraft != null ? baseDraft.getCreatedAt() : null)
-                        .build()
-        );
+        PostDraft saved;
+        if (baseDraft == null) {
+            saved = savePostDraftPort.save(
+                    PostDraft.builder()
+                            .user(user)
+                            .board(board)
+                            .title(command.title())
+                            .content(command.content())
+                            .savedAt(now)
+                            .build()
+            );
+        } else {
+            baseDraft.updateDraft(board, command.title(), command.content(), now);
+            saved = savePostDraftPort.save(baseDraft);
+        }
 
         return PostDraftResult.from(saved);
     }

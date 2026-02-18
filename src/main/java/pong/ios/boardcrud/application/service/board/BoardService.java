@@ -62,18 +62,8 @@ public class BoardService implements
         Long userId = securityHolder.getCurrentUserId();
         validateManager(boardId, userId);
         validateBoardIsActive(board);
-
-        saveBoardPort.save(
-                Board.builder()
-                        .id(board.getId())
-                        .name(board.getName())
-                        .type(board.getType())
-                        .description(board.getDescription())
-                        .isActive(false)
-                        .createdAt(board.getCreatedAt())
-                        .updatedAt(board.getUpdatedAt())
-                        .build()
-        );
+        board.deactivate();
+        saveBoardPort.save(board);
     }
 
     @Override
@@ -93,18 +83,8 @@ public class BoardService implements
         Long userId = securityHolder.getCurrentUserId();
         validateManager(boardId, userId);
         validateBoardIsActive(board);
-
-        saveBoardPort.save(
-                Board.builder()
-                        .id(board.getId())
-                        .name(name)
-                        .type(type)
-                        .description(description)
-                        .isActive(board.isActive())
-                        .createdAt(board.getCreatedAt())
-                        .updatedAt(board.getUpdatedAt())
-                        .build()
-        );
+        board.updateInfo(name, type, description);
+        saveBoardPort.save(board);
     }
 
     private void validateManager(Long boardId, Long userId) {

@@ -9,6 +9,7 @@ import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.dto.CreatePostCommand;
 import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
 import pong.ios.boardcrud.application.port.in.post.dto.UpdatePostCommand;
+import pong.ios.boardcrud.application.port.out.board.LoadBoardManagerPort;
 import pong.ios.boardcrud.application.port.out.board.LoadBoardPort;
 import pong.ios.boardcrud.application.port.out.post.LoadPostPort;
 import pong.ios.boardcrud.application.port.out.post.SavePostPort;
@@ -34,6 +35,7 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
     private final LoadPostPort loadPostPort;
     private final SavePostPort savePostPort;
     private final LoadUserPort loadUserPort;
+    private final LoadBoardManagerPort loadBoardManagerPort;
     private final LoadBoardPort loadBoardPort;
     private final SecurityHolder securityHolder;
 
@@ -72,28 +74,14 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
         Post post = getPost(command.postId());
         validateNotDeleted(post);
         validateWriter(post, requester.getId());
-
-        Post updated = savePostPort.save(
-                Post.builder()
-                        .id(post.getId())
-                        .user(post.getUser())
-                        .board(post.getBoard())
-                        .title(command.title())
-                        .content(command.content())
-                        .category(command.category())
-                        .tags(normalizeTags(command.tags()))
-                        .status(post.getStatus())
-                        .isPinned(post.isPinned())
-                        .pinnedAt(post.getPinnedAt())
-                        .pinnedBy(post.getPinnedBy())
-                        .viewCount(post.getViewCount())
-                        .likeCount(post.getLikeCount())
-                        .commentCount(post.getCommentCount())
-                        .deletedAt(post.getDeletedAt())
-                        .createdAt(post.getCreatedAt())
-                        .updatedAt(LocalDateTime.now())
-                        .build()
+        post.updateEditableFields(
+                command.title(),
+                command.content(),
+                command.category(),
+                normalizeTags(command.tags()),
+                LocalDateTime.now()
         );
+        Post updated = savePostPort.save(post);
 
         return PostResult.from(updated);
     }
@@ -105,28 +93,9 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
         Post post = getPost(postId);
         validateNotDeleted(post);
         validateDeletable(post, requester);
-
-        savePostPort.save(
-                Post.builder()
-                        .id(post.getId())
-                        .user(post.getUser())
-                        .board(post.getBoard())
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .category(post.getCategory())
-                        .tags(post.getTags())
-                        .status(PostStatus.DELETED)
-                        .isPinned(post.isPinned())
-                        .pinnedAt(post.getPinnedAt())
-                        .pinnedBy(post.getPinnedBy())
-                        .viewCount(post.getViewCount())
-                        .likeCount(post.getLikeCount())
-                        .commentCount(post.getCommentCount())
-                        .deletedAt(LocalDateTime.now())
-                        .createdAt(post.getCreatedAt())
-                        .updatedAt(LocalDateTime.now())
-                        .build()
-        );
+        LocalDateTime now = LocalDateTime.now();
+        post.softDelete(now, now);
+        savePostPort.save(post);
     }
 
     private Post getPost(Long postId) {
@@ -158,7 +127,8 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
     private void validateDeletable(Post post, User requester) {
         boolean isWriter = post.getUser().getId().equals(requester.getId());
         boolean isAdmin = requester.getRole() == UserRoleType.ADMIN;
-        if (!isWriter && !isAdmin) {
+        boolean isBoardManager = loadBoardManagerPort.existsById(post.getBoard().getId(), requester.getId());
+        if (!isWriter && !isAdmin && !isBoardManager) {
             throw new ApplicationException(PostErrorStatusCode.POST_FORBIDDEN);
         }
     }

@@ -10,11 +10,18 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class PostDraft {
-    private final Long id;
-    private final User user;
-    private final Board board;
-    private final String title;
-    private final String content;
-    private final LocalDateTime savedAt;
-    private final LocalDateTime createdAt;
+    private Long id;
+    private User user;
+    private Board board;
+    private String title;
+    private String content;
+    private LocalDateTime savedAt;
+    private LocalDateTime createdAt;
+
+    public void updateDraft(Board board, String title, String content, LocalDateTime savedAt) {
+        this.board = board;
+        this.title = title;
+        this.content = content;
+        this.savedAt = savedAt;
+    }
 }

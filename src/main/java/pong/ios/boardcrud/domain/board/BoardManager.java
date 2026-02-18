@@ -9,11 +9,16 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class BoardManager {
-    private final Long id;
-    private final Board board;
-    private final User user;
-    private final LocalDateTime grantedAt;
-    private final User grantedBy;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private Long id;
+    private Board board;
+    private User user;
+    private LocalDateTime grantedAt;
+    private User grantedBy;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public void changeGrantInfo(User grantedBy, LocalDateTime grantedAt) {
+        this.grantedBy = grantedBy;
+        this.grantedAt = grantedAt;
+    }
 }
