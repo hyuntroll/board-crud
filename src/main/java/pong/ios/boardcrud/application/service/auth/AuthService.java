@@ -10,6 +10,7 @@ import pong.ios.boardcrud.application.port.in.auth.LogoutUseCase;
 import pong.ios.boardcrud.application.port.in.auth.ReissueTokenUseCase;
 import pong.ios.boardcrud.application.port.out.auth.DeleteRefreshTokenPort;
 import pong.ios.boardcrud.application.port.out.auth.LoadRefreshTokenPort;
+import pong.ios.boardcrud.application.port.out.auth.LoginAttemptPort;
 import pong.ios.boardcrud.application.port.out.auth.SaveRefreshTokenPort;
 import pong.ios.boardcrud.application.port.out.user.LoadUserPort;
 import pong.ios.boardcrud.domain.auth.AuthStatusCode;
@@ -30,6 +31,7 @@ public class AuthService implements LoginUseCase, LogoutUseCase, ReissueTokenUse
     private final LoadUserPort loadUserPort;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final LoginAttemptPort loginAttemptPort;
 
     @Override
     public JwtPayload login(String loginId, String password) {
@@ -38,10 +40,24 @@ public class AuthService implements LoginUseCase, LogoutUseCase, ReissueTokenUse
             loadUserPort.findByUsername(loginId))
             .orElseThrow(() -> new ApplicationException(AuthStatusCode.INVALID_CREDENTIALS));
 
+        Long userId = user.getId();
+        if (loginAttemptPort.isBlocked(userId)) {
+            int remainingMinutes = loginAttemptPort.getRemainingLockTime(userId);
+            throw new ApplicationException(
+                    AuthStatusCode.ACCOUNT_LOCK,
+                    String.format("계정이 일시적으로 잠겼습니다. %s분  다시 시도하세요.", remainingMinutes)
+            );
+        }
+
+
+        // 비밀번호 확인
         if (!passwordEncoder.matches(password, user.getPassword())) {
+            loginAttemptPort.recordFailure(userId);
             throw new ApplicationException(AuthStatusCode.INVALID_CREDENTIALS);
         }
-        Long userId = user.getId();
+        loginAttemptPort.resetAttempt(userId);
+
+        // JWT 토큰 발급
         String access = jwtProvider.generateAccessToken(userId, user.getRole());
         String refresh = jwtProvider.generateRefreshToken(userId);
         saveRefreshTokenPort.save(userId, refresh);
