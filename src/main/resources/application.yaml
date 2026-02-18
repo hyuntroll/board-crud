@@ -28,6 +28,10 @@ spring:
       host: ${REDIS_URL:?REDIS_URL missing}
       port: ${REDIS_PORT:?REDIS_PORT missing}
 
+  auth:
+    attempt-window: 30
+    lock-duration: 30
+
   mail:
     host: smtp.gmail.com
     port: 587

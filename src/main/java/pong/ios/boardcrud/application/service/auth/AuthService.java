@@ -45,10 +45,9 @@ public class AuthService implements LoginUseCase, LogoutUseCase, ReissueTokenUse
             int remainingMinutes = loginAttemptPort.getRemainingLockTime(userId);
             throw new ApplicationException(
                     AuthStatusCode.ACCOUNT_LOCK,
-                    String.format("계정이 일시적으로 잠겼습니다. %s분  다시 시도하세요.", remainingMinutes)
+                    String.format("계정이 일시적으로 잠겼습니다. %s분 후 다시 시도하세요.", remainingMinutes)
             );
         }
-
 
         // 비밀번호 확인
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -82,6 +81,10 @@ public class AuthService implements LoginUseCase, LogoutUseCase, ReissueTokenUse
 
         if (!loadRefreshTokenPort.exists(userId, oldToken)) {
             throw new ApplicationException(JwtStatusCode.EXPIRED_TOKEN);
+        }
+
+        if (loginAttemptPort.isBlocked(userId)) {
+            throw new ApplicationException(AuthStatusCode.ACCOUNT_LOCK);
         }
 
         User user = loadUserPort.findById(userId)
