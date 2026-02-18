@@ -2,11 +2,7 @@ package pong.ios.boardcrud.adapter.out.persistence.board.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import pong.ios.boardcrud.global.entity.BaseEntity;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,7 +15,7 @@ public class BoardEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -30,4 +26,11 @@ public class BoardEntity extends BaseEntity {
 
     @Column(nullable = false)
     private boolean isActive;
+
+    public void update(String name, String type, String description, boolean isActive) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.isActive = isActive;
+    }
 }

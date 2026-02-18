@@ -72,6 +72,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/user/sign-up").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/boards/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
 
