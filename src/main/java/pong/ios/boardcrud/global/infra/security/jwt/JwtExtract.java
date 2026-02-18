@@ -44,7 +44,7 @@ public class JwtExtract {
             return token.substring(7);
         }
 
-        throw new ApplicationException(JwtStatusCode.INVALID_TOKEN);
+        return token;
     }
 
 
