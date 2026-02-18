@@ -49,7 +49,7 @@ public class JwtExtract {
 
 
     public void checkTokenType(final Claims claims, final TokenType tokenType) {
-        if(!claims.get("token_type").equals(tokenType.toString())) {
+        if(claims.get("token_type") != null && !claims.get("token_type").equals(tokenType.toString())) {
             throw new ApplicationException(JwtStatusCode.INVALID_TOKEN, "잘못된 토큰 타입입니다.");
         }
     }
