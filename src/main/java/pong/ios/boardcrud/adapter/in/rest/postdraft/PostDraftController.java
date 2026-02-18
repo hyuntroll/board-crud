@@ -1,0 +1,58 @@
+package pong.ios.boardcrud.adapter.in.rest.postdraft;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pong.ios.boardcrud.adapter.in.rest.postdraft.docs.PostDraftControllerDocs;
+import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.request.SavePostDraftRequest;
+import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.response.PostDraftResponse;
+import pong.ios.boardcrud.application.port.in.postdraft.DeletePostDraftUseCase;
+import pong.ios.boardcrud.application.port.in.postdraft.GetPostDraftUseCase;
+import pong.ios.boardcrud.application.port.in.postdraft.SavePostDraftUseCase;
+import pong.ios.boardcrud.global.data.BaseResponse;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/post-drafts")
+public class PostDraftController implements PostDraftControllerDocs {
+    private final SavePostDraftUseCase savePostDraftUseCase;
+    private final GetPostDraftUseCase getPostDraftUseCase;
+    private final DeletePostDraftUseCase deletePostDraftUseCase;
+
+    @Override
+    @PostMapping
+    public ResponseEntity<BaseResponse<PostDraftResponse>> saveDraft(@Valid @RequestBody SavePostDraftRequest request) {
+        return BaseResponse.ok(
+                "임시 저장되었습니다.",
+                PostDraftResponse.from(savePostDraftUseCase.saveDraft(request.toCommand()))
+        );
+    }
+
+    @Override
+    @GetMapping("/{draftId}")
+    public ResponseEntity<BaseResponse<PostDraftResponse>> getDraft(@PathVariable Long draftId) {
+        return BaseResponse.ok(
+                PostDraftResponse.from(getPostDraftUseCase.getDraft(draftId))
+        );
+    }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<BaseResponse<List<PostDraftResponse>>> getMyDrafts(@RequestParam(required = false) Long boardId) {
+        return BaseResponse.ok(
+                getPostDraftUseCase.getMyDrafts(boardId).stream()
+                        .map(PostDraftResponse::from)
+                        .toList()
+        );
+    }
+
+    @Override
+    @DeleteMapping("/{draftId}")
+    public ResponseEntity<BaseResponse<Void>> deleteDraft(@PathVariable Long draftId) {
+        deletePostDraftUseCase.deleteDraft(draftId);
+        return BaseResponse.ok("임시 저장글이 삭제되었습니다.");
+    }
+}

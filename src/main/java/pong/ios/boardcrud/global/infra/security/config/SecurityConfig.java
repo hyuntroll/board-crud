@@ -76,6 +76,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/boards/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/posts/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/posts/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/posts/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/post-drafts/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/post-drafts/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/post-drafts/**").hasAnyAuthority("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
 
