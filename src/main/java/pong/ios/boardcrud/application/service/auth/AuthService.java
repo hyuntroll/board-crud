@@ -41,37 +41,40 @@ public class AuthService implements LoginUseCase, LogoutUseCase, ReissueTokenUse
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new ApplicationException(AuthStatusCode.INVALID_CREDENTIALS);
         }
-
-        String access = jwtProvider.generateAccessToken(user.getId(), user.getRole());
-        String refresh = jwtProvider.generateRefreshToken(user.getId());
-        saveRefreshTokenPort.save(refresh);
+        Long userId = user.getId();
+        String access = jwtProvider.generateAccessToken(userId, user.getRole());
+        String refresh = jwtProvider.generateRefreshToken(userId);
+        saveRefreshTokenPort.save(userId, refresh);
 
         return new JwtPayload(access, refresh);
     }
 
     @Override
     public void logout(String refreshToken) {
-        if (!loadRefreshTokenPort.exists(refreshToken)) {
+        Long userId = jwtProvider.getUserId(refreshToken);
+
+        if (!loadRefreshTokenPort.exists(userId, refreshToken)) {
             throw new ApplicationException(JwtStatusCode.EXPIRED_TOKEN);
         }
 
-        deleteRefreshTokenPort.delete(refreshToken);
+        deleteRefreshTokenPort.delete(userId, refreshToken);
     }
 
     @Override
     public JwtPayload reissueToken(String oldToken) {
-        if (!loadRefreshTokenPort.exists(oldToken)) {
+        Long userId = jwtProvider.getUserId(oldToken);
+
+        if (!loadRefreshTokenPort.exists(userId, oldToken)) {
             throw new ApplicationException(JwtStatusCode.EXPIRED_TOKEN);
         }
 
-        Long userId = jwtProvider.getUserId(oldToken);
         User user = loadUserPort.findById(userId)
             .orElseThrow(() -> new ApplicationException(UserStatusCode.USER_NOT_FOUND));
 
         String access = jwtProvider.generateAccessToken(userId, user.getRole());
         String refresh = jwtProvider.generateRefreshToken(userId);
-        saveRefreshTokenPort.save(refresh);
-        deleteRefreshTokenPort.delete(oldToken);
+        saveRefreshTokenPort.save(userId, refresh);
+        deleteRefreshTokenPort.delete(userId, oldToken);
 
         return new JwtPayload(access, refresh);
     }

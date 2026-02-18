@@ -10,7 +10,6 @@ import pong.ios.boardcrud.application.port.out.auth.SaveRefreshTokenPort;
 import pong.ios.boardcrud.global.infra.security.jwt.config.JwtProperties;
 
 import java.time.Duration;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +29,11 @@ public class RefreshTokenRedisAdapter implements
     }
 
     @Override
+    public void delete(Long userId, String refreshToken) {
+
+    }
+
+    @Override
     public void save(String refreshToken) {
         String key = REFRESH_TOKEN_PREFIX + refreshToken;
 
@@ -41,8 +45,18 @@ public class RefreshTokenRedisAdapter implements
     }
 
     @Override
+    public void save(Long userId, String refreshToken) {
+
+    }
+
+    @Override
     public boolean exists(String refreshToken) {
         String key = REFRESH_TOKEN_PREFIX + refreshToken;
         return redisTemplate.hasKey(key);
+    }
+
+    @Override
+    public boolean exists(Long userId, String refreshToken) {
+        return false;
     }
 }
