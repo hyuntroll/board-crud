@@ -8,8 +8,6 @@ import pong.ios.boardcrud.adapter.out.persistence.board.repository.BoardReposito
 import pong.ios.boardcrud.application.port.out.board.LoadBoardPort;
 import pong.ios.boardcrud.application.port.out.board.SaveBoardPort;
 import pong.ios.boardcrud.domain.board.Board;
-import pong.ios.boardcrud.domain.board.BoardStatusCode;
-import pong.ios.boardcrud.global.exception.ApplicationException;
 
 import java.util.Optional;
 
@@ -27,21 +25,10 @@ public class BoardPersistenceAdapter implements LoadBoardPort, SaveBoardPort {
 
     @Override
     public Board save(Board board) {
-        if (board.getId() == null) {
-            BoardEntity created = boardRepository.save(boardMapper.toEntity(board));
-            return boardMapper.toDomain(created);
-        }
-
-        BoardEntity boardEntity = boardRepository.findById(board.getId())
-                .orElseThrow(() -> new ApplicationException(BoardStatusCode.BOARD_NOT_FOUND));
-
-        boardEntity.update(
-                board.getName(),
-                board.getType(),
-                board.getDescription(),
-                board.isActive()
+        return boardMapper.toDomain(
+                boardRepository.save(
+                        boardMapper.toEntity(board)
+                )
         );
-
-        return boardMapper.toDomain(boardRepository.save(boardEntity));
     }
 }

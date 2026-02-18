@@ -2,11 +2,8 @@ package pong.ios.boardcrud.adapter.out.persistence.post.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import pong.ios.boardcrud.adapter.out.persistence.board.entity.BoardEntity;
 import pong.ios.boardcrud.adapter.out.persistence.user.entity.UserEntity;
-import pong.ios.boardcrud.domain.post.PostStatus;
 import pong.ios.boardcrud.global.entity.BaseEntity;
 
 import java.time.LocalDateTime;
@@ -36,4 +33,13 @@ public class PostDraftEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private LocalDateTime savedAt;
+
+    public void update(BoardEntity board, String title, String content, LocalDateTime savedAt) {
+        this.board = board;
+        this.title = title;
+        this.content = content;
+        this.savedAt = savedAt;
+    }
 }
