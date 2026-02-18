@@ -71,6 +71,7 @@ public class AuthService implements LoginUseCase, LogoutUseCase, ReissueTokenUse
         String access = jwtProvider.generateAccessToken(userId, user.getRole());
         String refresh = jwtProvider.generateRefreshToken(userId);
         saveRefreshTokenPort.save(refresh);
+        deleteRefreshTokenPort.delete(oldToken);
 
         return new JwtPayload(access, refresh);
     }
