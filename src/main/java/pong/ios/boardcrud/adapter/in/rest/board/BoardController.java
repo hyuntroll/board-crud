@@ -21,7 +21,7 @@ public class BoardController implements BoardControllerDocs {
     private final UpdateBoardUseCase updateBoardUseCase;
     private final DeleteBoardUseCase deleteBoardUseCase;
     private final GrantBoardManagerUseCase grantBoardManagerUseCase;
-    private final DepriveBoardMangerUseCase depriveBoardMangerUseCase;
+    private final DepriveBoardManagerUseCase depriveBoardManagerUseCase;
 
     @Override
     @PostMapping
@@ -60,7 +60,7 @@ public class BoardController implements BoardControllerDocs {
     @Override
     @DeleteMapping("/{boardId}/managers/{userId}")
     public ResponseEntity<BaseResponse<Void>> depriveBoardManager(@PathVariable Long boardId, @PathVariable Long userId) {
-        depriveBoardMangerUseCase.deprive(boardId, userId);
+        depriveBoardManagerUseCase.deprive(boardId, userId);
         return BaseResponse.ok("게시판 관리자 권한을 회수했습니다.");
     }
 }

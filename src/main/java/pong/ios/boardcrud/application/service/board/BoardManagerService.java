@@ -4,7 +4,7 @@ package pong.ios.boardcrud.application.service.board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pong.ios.boardcrud.application.port.in.board.DepriveBoardMangerUseCase;
+import pong.ios.boardcrud.application.port.in.board.DepriveBoardManagerUseCase;
 import pong.ios.boardcrud.application.port.in.board.GrantBoardManagerUseCase;
 import pong.ios.boardcrud.application.port.out.board.DeleteBoardManagerPort;
 import pong.ios.boardcrud.application.port.out.board.LoadBoardManagerPort;
@@ -21,7 +21,7 @@ import pong.ios.boardcrud.global.infra.security.holder.SecurityHolder;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BoardManagerService implements GrantBoardManagerUseCase, DepriveBoardMangerUseCase {
+public class BoardManagerService implements GrantBoardManagerUseCase, DepriveBoardManagerUseCase {
     private final LoadUserPort loadUserPort;
     private final LoadBoardManagerPort loadBoardManagerPort;
     private final LoadBoardPort loadBoardPort;
