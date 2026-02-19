@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pong.ios.boardcrud.application.port.in.post.CreatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.DeletePostUseCase;
+import pong.ios.boardcrud.application.port.in.post.GetPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.dto.CreatePostCommand;
 import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
@@ -31,7 +32,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PostService implements CreatePostUseCase, UpdatePostUseCase, DeletePostUseCase {
+public class PostService implements CreatePostUseCase, UpdatePostUseCase, DeletePostUseCase, GetPostUseCase {
     private final LoadPostPort loadPostPort;
     private final SavePostPort savePostPort;
     private final LoadUserPort loadUserPort;
@@ -96,6 +97,28 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
         LocalDateTime now = LocalDateTime.now();
         post.softDelete(now, now);
         savePostPort.save(post);
+    }
+
+    @Override
+    public List<PostResult> getPosts() {
+        return loadPostPort.findAll().stream()
+                .map(PostResult::from)
+                .toList();
+    }
+
+    @Override
+    public List<PostResult> getPostsByBoard(Long boardId) {
+        getActiveBoard(boardId);
+        return loadPostPort.findAllByBoardId(boardId).stream()
+                .map(PostResult::from)
+                .toList();
+    }
+
+    @Override
+    public PostResult getPostDetail(Long postId) {
+        Post post = getPost(postId);
+        validateNotDeleted(post);
+        return PostResult.from(post);
     }
 
     private Post getPost(Long postId) {
