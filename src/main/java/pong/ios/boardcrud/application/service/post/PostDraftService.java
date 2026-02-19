@@ -45,7 +45,6 @@ public class PostDraftService implements
     public PostDraftResult saveDraft(SavePostDraftCommand command) {
         Long userId = securityHolder.getCurrentUserId();
         User user = getUser(userId);
-        Board board = getBoard(command.boardId());
 
         PostDraft baseDraft = command.draftId() == null
                 ? null
@@ -54,6 +53,7 @@ public class PostDraftService implements
         LocalDateTime now = LocalDateTime.now();
         PostDraft saved;
         if (baseDraft == null) {
+            Board board = getBoard(command.boardId());
             saved = savePostDraftPort.save(
                     PostDraft.builder()
                             .user(user)
@@ -64,7 +64,11 @@ public class PostDraftService implements
                             .build()
             );
         } else {
-            baseDraft.updateDraft(board, command.title(), command.content(), now);
+            if (!baseDraft.getBoard().getId().equals(command.boardId())) {
+                throw new ApplicationException(PostDraftStatusCode.POST_DRAFT_BOARD_CHANGE_NOT_ALLOWED);
+            }
+
+            baseDraft.updateDraft(command.title(), command.content(), now);
             saved = savePostDraftPort.save(baseDraft);
         }
 

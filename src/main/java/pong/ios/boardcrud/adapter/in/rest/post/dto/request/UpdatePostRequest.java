@@ -18,7 +18,11 @@ public record UpdatePostRequest(
         @Size(max = 50, message = "카테고리는 50자 이하여야 합니다.")
         String category,
 
-        List<@NotBlank(message = "태그는 공백일 수 없습니다.") String> tags
+        @Size(max = 10, message = "태그는 최대 10개까지 입력할 수 있습니다.")
+        List<
+                @NotBlank(message = "태그는 공백일 수 없습니다.")
+                @Size(max = 30, message = "태그는 30자 이하여야 합니다.")
+                String> tags
 ) {
     public UpdatePostCommand toCommand(Long postId) {
         return new UpdatePostCommand(postId, title, content, category, tags);

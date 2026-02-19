@@ -18,8 +18,7 @@ public class PostDraft {
     private LocalDateTime savedAt;
     private LocalDateTime createdAt;
 
-    public void updateDraft(Board board, String title, String content, LocalDateTime savedAt) {
-        this.board = board;
+    public void updateDraft(String title, String content, LocalDateTime savedAt) {
         this.title = title;
         this.content = content;
         this.savedAt = savedAt;

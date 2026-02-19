@@ -9,7 +9,8 @@ import pong.ios.boardcrud.global.exception.StatusCode;
 @RequiredArgsConstructor
 public enum PostDraftStatusCode implements StatusCode {
     POST_DRAFT_NOT_FOUND("임시 저장된 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-    POST_DRAFT_FORBIDDEN("해당 임시 저장 게시글에 접근할 수 없습니다.", HttpStatus.FORBIDDEN);
+    POST_DRAFT_FORBIDDEN("해당 임시 저장 게시글에 접근할 수 없습니다.", HttpStatus.FORBIDDEN),
+    POST_DRAFT_BOARD_CHANGE_NOT_ALLOWED("임시 저장 게시글의 게시판은 변경할 수 없습니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus httpStatus;
