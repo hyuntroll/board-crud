@@ -3,12 +3,13 @@ package pong.ios.boardcrud.global.exception;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -34,6 +35,19 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        ErrorResponse error = ErrorResponse.of(
+                CommonStatusCode.INVALID_ARGUMENT.getHttpStatus().value(),
+                CommonStatusCode.INVALID_ARGUMENT.name(),
+                "요청 값이 유효하지 않습니다"
+        );
+
+        return ResponseEntity
+                .status(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus())
+                .body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, String> details = new HashMap<>();
@@ -55,17 +69,17 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
-    @ExceptionHandler(HttpClientErrorException.MethodNotAllowed.class)
-    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(HttpClientErrorException.MethodNotAllowed ex) {
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException ex) {
 
         ErrorResponse error = ErrorResponse.of(
-                CommonStatusCode.ENDPOINT_NOT_FOUND.getHttpStatus().value(),
-                CommonStatusCode.ENDPOINT_NOT_FOUND.name(),
-                CommonStatusCode.ENDPOINT_NOT_FOUND.getMessage()
+                CommonStatusCode.METHOD_NOT_ALLOWED.getHttpStatus().value(),
+                CommonStatusCode.METHOD_NOT_ALLOWED.name(),
+                CommonStatusCode.METHOD_NOT_ALLOWED.getMessage()
         );
 
         return ResponseEntity
-                .status(CommonStatusCode.ENDPOINT_NOT_FOUND.getHttpStatus())
+                .status(CommonStatusCode.METHOD_NOT_ALLOWED.getHttpStatus())
                 .body(error);
     }
 
