@@ -2,23 +2,15 @@ package pong.ios.boardcrud.adapter.out.persistence.post.mapper;
 
 import org.springframework.stereotype.Component;
 import pong.ios.boardcrud.adapter.out.persistence.board.entity.BoardEntity;
-import pong.ios.boardcrud.adapter.out.persistence.board.mapper.BoardMapper;
 import pong.ios.boardcrud.adapter.out.persistence.post.entity.PostDraftEntity;
 import pong.ios.boardcrud.adapter.out.persistence.user.entity.UserEntity;
-import pong.ios.boardcrud.adapter.out.persistence.user.mapper.UserMapper;
+import pong.ios.boardcrud.domain.board.Board;
 import pong.ios.boardcrud.domain.post.PostDraft;
+import pong.ios.boardcrud.domain.user.User;
 import pong.ios.boardcrud.global.mapper.Mapper;
 
 @Component
 public class PostDraftMapper implements Mapper<PostDraft, PostDraftEntity> {
-    private final UserMapper userMapper;
-    private final BoardMapper boardMapper;
-
-    public PostDraftMapper(UserMapper userMapper, BoardMapper boardMapper) {
-        this.userMapper = userMapper;
-        this.boardMapper = boardMapper;
-    }
-
     @Override
     public PostDraftEntity toEntity(PostDraft domain) {
         return PostDraftEntity.builder()
@@ -46,8 +38,8 @@ public class PostDraftMapper implements Mapper<PostDraft, PostDraftEntity> {
     public PostDraft toDomain(PostDraftEntity entity) {
         return PostDraft.builder()
                 .id(entity.getId())
-                .user(userMapper.toDomain(entity.getUser()))
-                .board(boardMapper.toDomain(entity.getBoard()))
+                .user(User.builder().id(entity.getUser().getId()).build())
+                .board(Board.builder().id(entity.getBoard().getId()).build())
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .savedAt(entity.getSavedAt())

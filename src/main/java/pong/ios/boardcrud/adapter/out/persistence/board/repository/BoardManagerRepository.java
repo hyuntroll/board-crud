@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoardManagerRepository extends JpaRepository<BoardManagerEntity, Long> {
-    @EntityGraph(attributePaths = {"board", "user", "granter"})
+    @EntityGraph(attributePaths = {"user"})
     Optional<BoardManagerEntity> findByBoard_IdAndUser_Id(Long boardId, Long userId);
 
-    @EntityGraph(attributePaths = {"board", "user", "granter"})
+    @EntityGraph(attributePaths = {"user"})
     List<BoardManagerEntity> findAllByBoard_Id(Long boardId);
 
     boolean existsByBoard_IdAndUser_Id(Long boardId, Long userId);

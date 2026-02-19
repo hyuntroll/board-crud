@@ -5,18 +5,18 @@ import pong.ios.boardcrud.adapter.out.persistence.board.entity.BoardEntity;
 import pong.ios.boardcrud.adapter.out.persistence.board.entity.BoardManagerEntity;
 import pong.ios.boardcrud.adapter.out.persistence.user.entity.UserEntity;
 import pong.ios.boardcrud.adapter.out.persistence.user.mapper.UserMapper;
+import pong.ios.boardcrud.domain.board.Board;
 import pong.ios.boardcrud.domain.board.BoardManager;
+import pong.ios.boardcrud.domain.user.User;
 import pong.ios.boardcrud.global.mapper.Mapper;
 
 import java.time.LocalDateTime;
 
 @Component
 public class BoardManagerMapper implements Mapper<BoardManager, BoardManagerEntity> {
-    private final BoardMapper boardMapper;
     private final UserMapper userMapper;
 
-    public BoardManagerMapper(BoardMapper boardMapper, UserMapper userMapper) {
-        this.boardMapper = boardMapper;
+    public BoardManagerMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
@@ -44,10 +44,10 @@ public class BoardManagerMapper implements Mapper<BoardManager, BoardManagerEnti
     public BoardManager toDomain(BoardManagerEntity entity) {
         return BoardManager.builder()
                 .id(entity.getId())
-                .board(boardMapper.toDomain(entity.getBoard()))
+                .board(Board.builder().id(entity.getBoard().getId()).build())
                 .user(userMapper.toDomain(entity.getUser()))
                 .grantedAt(entity.getGrantedAt())
-                .grantedBy(userMapper.toDomain(entity.getGranter()))
+                .grantedBy(User.builder().id(entity.getGranter().getId()).build())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

@@ -2,11 +2,12 @@ package pong.ios.boardcrud.adapter.out.persistence.post.mapper;
 
 import org.springframework.stereotype.Component;
 import pong.ios.boardcrud.adapter.out.persistence.board.entity.BoardEntity;
-import pong.ios.boardcrud.adapter.out.persistence.board.mapper.BoardMapper;
 import pong.ios.boardcrud.adapter.out.persistence.post.entity.PostEntity;
 import pong.ios.boardcrud.adapter.out.persistence.user.entity.UserEntity;
 import pong.ios.boardcrud.adapter.out.persistence.user.mapper.UserMapper;
+import pong.ios.boardcrud.domain.board.Board;
 import pong.ios.boardcrud.domain.post.Post;
+import pong.ios.boardcrud.domain.user.User;
 import pong.ios.boardcrud.global.mapper.Mapper;
 
 import java.util.ArrayList;
@@ -15,11 +16,9 @@ import java.util.List;
 @Component
 public class PostMapper implements Mapper<Post, PostEntity> {
     private final UserMapper userMapper;
-    private final BoardMapper boardMapper;
 
-    public PostMapper(UserMapper userMapper, BoardMapper boardMapper) {
+    public PostMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
-        this.boardMapper = boardMapper;
     }
 
     @Override
@@ -66,10 +65,11 @@ public class PostMapper implements Mapper<Post, PostEntity> {
 
     @Override
     public Post toDomain(PostEntity entity) {
+        User pinnedBy = entity.getPinnedBy() == null ? null : User.builder().id(entity.getPinnedBy().getId()).build();
         return Post.builder()
                 .id(entity.getId())
                 .user(userMapper.toDomain(entity.getUser()))
-                .board(boardMapper.toDomain(entity.getBoard()))
+                .board(Board.builder().id(entity.getBoard().getId()).build())
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .category(entity.getCategory())
@@ -77,7 +77,7 @@ public class PostMapper implements Mapper<Post, PostEntity> {
                 .status(entity.getStatus())
                 .isPinned(entity.isPinned())
                 .pinnedAt(entity.getPinnedAt())
-                .pinnedBy(entity.getPinnedBy() == null ? null : userMapper.toDomain(entity.getPinnedBy()))
+                .pinnedBy(pinnedBy)
                 .viewCount(entity.getViewCount())
                 .likeCount(entity.getLikeCount())
                 .commentCount(entity.getCommentCount())

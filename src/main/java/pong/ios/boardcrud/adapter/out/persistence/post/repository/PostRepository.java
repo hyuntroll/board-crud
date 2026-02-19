@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
-    @EntityGraph(attributePaths = {"user", "board", "pinnedBy", "tags"})
+    @EntityGraph(attributePaths = {"user", "tags"})
     Optional<PostEntity> findById(Long id);
 
-    @EntityGraph(attributePaths = {"user", "board", "pinnedBy", "tags"})
+    @EntityGraph(attributePaths = {"user", "tags"})
     List<PostEntity> findAllByStatusOrderByCreatedAtDesc(PostStatus status);
 
-    @EntityGraph(attributePaths = {"user", "board", "pinnedBy", "tags"})
+    @EntityGraph(attributePaths = {"user", "tags"})
     List<PostEntity> findAllByBoard_IdAndStatusOrderByCreatedAtDesc(Long boardId, PostStatus status);
 }
