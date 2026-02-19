@@ -158,7 +158,7 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
 
     private void validateNotDeleted(Post post) {
         if (post.getStatus() == PostStatus.DELETED) {
-            throw new ApplicationException(PostErrorStatusCode.POST_ALREADY_DELETED);
+            throw new ApplicationException(PostErrorStatusCode.POST_DELETED);
         }
     }
 

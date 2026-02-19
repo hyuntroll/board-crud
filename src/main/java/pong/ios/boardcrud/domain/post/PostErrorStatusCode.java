@@ -10,7 +10,7 @@ import pong.ios.boardcrud.global.exception.StatusCode;
 public enum PostErrorStatusCode implements StatusCode {
     POST_NOT_FOUND("게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     POST_FORBIDDEN("해당 게시글에 접근할 수 없습니다.", HttpStatus.FORBIDDEN),
-    POST_ALREADY_DELETED("이미 삭제된 게시글입니다.", HttpStatus.CONFLICT);
+    POST_DELETED("삭제된 게시글입니다.", HttpStatus.CONFLICT);
 
     private final String message;
     private final HttpStatus httpStatus;
