@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -69,17 +69,17 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
-    @ExceptionHandler(HttpClientErrorException.MethodNotAllowed.class)
-    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(HttpClientErrorException.MethodNotAllowed ex) {
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException ex) {
 
         ErrorResponse error = ErrorResponse.of(
-                CommonStatusCode.ENDPOINT_NOT_FOUND.getHttpStatus().value(),
-                CommonStatusCode.ENDPOINT_NOT_FOUND.name(),
-                CommonStatusCode.ENDPOINT_NOT_FOUND.getMessage()
+                CommonStatusCode.METHOD_NOT_ALLOWED.getHttpStatus().value(),
+                CommonStatusCode.METHOD_NOT_ALLOWED.name(),
+                CommonStatusCode.METHOD_NOT_ALLOWED.getMessage()
         );
 
         return ResponseEntity
-                .status(CommonStatusCode.ENDPOINT_NOT_FOUND.getHttpStatus())
+                .status(CommonStatusCode.METHOD_NOT_ALLOWED.getHttpStatus())
                 .body(error);
     }
 
