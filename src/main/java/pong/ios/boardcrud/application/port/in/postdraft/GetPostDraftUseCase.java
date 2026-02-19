@@ -1,11 +1,11 @@
 package pong.ios.boardcrud.application.port.in.postdraft;
 
 import pong.ios.boardcrud.application.port.in.postdraft.dto.PostDraftResult;
-
-import java.util.List;
+import pong.ios.boardcrud.global.data.PageQuery;
+import pong.ios.boardcrud.global.data.PageResult;
 
 public interface GetPostDraftUseCase {
     PostDraftResult getDraft(Long draftId);
 
-    List<PostDraftResult> getMyDrafts(Long boardId);
+    PageResult<PostDraftResult> getMyDrafts(Long boardId, PageQuery query);
 }

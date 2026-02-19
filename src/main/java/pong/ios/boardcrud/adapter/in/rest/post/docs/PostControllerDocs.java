@@ -10,13 +10,18 @@ import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostRequest;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.response.PostResponse;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.response.PostSummary;
 import pong.ios.boardcrud.global.data.BaseResponse;
-
-import java.util.List;
+import pong.ios.boardcrud.global.data.PageResult;
 
 public interface PostControllerDocs {
     ResponseEntity<BaseResponse<PostResponse>> createPost(@Valid @RequestBody CreatePostRequest request);
 
-    ResponseEntity<BaseResponse<List<PostSummary>>> getPosts(@RequestParam(required = false) Long boardId);
+    ResponseEntity<BaseResponse<PageResult<PostSummary>>> getPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(required = false) Long boardId
+    );
 
     ResponseEntity<BaseResponse<PostResponse>> getPostDetail(@PathVariable Long postId);
 

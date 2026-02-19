@@ -1,6 +1,8 @@
 package pong.ios.boardcrud.adapter.out.persistence.post;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import pong.ios.boardcrud.adapter.out.persistence.post.mapper.PostMapper;
 import pong.ios.boardcrud.adapter.out.persistence.post.repository.PostRepository;
@@ -8,8 +10,11 @@ import pong.ios.boardcrud.application.port.out.post.LoadPostPort;
 import pong.ios.boardcrud.application.port.out.post.SavePostPort;
 import pong.ios.boardcrud.domain.post.Post;
 import pong.ios.boardcrud.domain.post.PostStatus;
+import pong.ios.boardcrud.global.data.PageQuery;
+import pong.ios.boardcrud.global.data.PageResult;
+import pong.ios.boardcrud.global.util.PageableUtils;
 
-import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 
 @Component
@@ -25,17 +30,26 @@ public class PostPersistenceAdapter implements LoadPostPort, SavePostPort {
     }
 
     @Override
-    public List<Post> findAll() {
-        return postRepository.findAllByStatusOrderByCreatedAtDesc(PostStatus.PUBLISHED).stream()
-                .map(postMapper::toDomain)
-                .toList();
+    public PageResult<Post> findAll(PageQuery query) {
+        Page<Post> page = postRepository.findAllByStatus(
+                        PostStatus.PUBLISHED,
+                        toPageable(query)
+                )
+                .map(postMapper::toDomain);
+
+        return PageResult.from(page);
     }
 
     @Override
-    public List<Post> findAllByBoardId(Long boardId) {
-        return postRepository.findAllByBoard_IdAndStatusOrderByCreatedAtDesc(boardId, PostStatus.PUBLISHED).stream()
-                .map(postMapper::toDomain)
-                .toList();
+    public PageResult<Post> findAllByBoardId(Long boardId, PageQuery query) {
+        Page<Post> page = postRepository.findAllByBoard_IdAndStatus(
+                        boardId,
+                        PostStatus.PUBLISHED,
+                        toPageable(query)
+                )
+                .map(postMapper::toDomain);
+
+        return PageResult.from(page);
     }
 
     @Override
@@ -45,5 +59,10 @@ public class PostPersistenceAdapter implements LoadPostPort, SavePostPort {
                         postMapper.toEntity(post)
                 )
         );
+    }
+
+    private Pageable toPageable(PageQuery query) {
+        Set<String> sortableFields = Set.of("createdAt", "updatedAt", "viewCount", "likeCount", "commentCount");
+        return PageableUtils.toPageable(query, sortableFields, "createdAt");
     }
 }

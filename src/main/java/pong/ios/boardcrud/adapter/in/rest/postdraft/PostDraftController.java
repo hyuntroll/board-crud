@@ -10,9 +10,10 @@ import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.response.PostDraftRespon
 import pong.ios.boardcrud.application.port.in.postdraft.DeletePostDraftUseCase;
 import pong.ios.boardcrud.application.port.in.postdraft.GetPostDraftUseCase;
 import pong.ios.boardcrud.application.port.in.postdraft.SavePostDraftUseCase;
+import pong.ios.boardcrud.global.data.PageQuery;
+import pong.ios.boardcrud.global.data.PageResult;
 import pong.ios.boardcrud.global.data.BaseResponse;
-
-import java.util.List;
+import pong.ios.boardcrud.application.port.in.postdraft.dto.PostDraftResult;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,11 +42,17 @@ public class PostDraftController implements PostDraftControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<BaseResponse<List<PostDraftResponse>>> getMyDrafts(@RequestParam(required = false) Long boardId) {
+    public ResponseEntity<BaseResponse<PageResult<PostDraftResponse>>> getMyDrafts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "savedAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(required = false) Long boardId
+    ) {
+        PageQuery query = new PageQuery(page, size, sortBy, direction);
+        PageResult<PostDraftResult> result = getPostDraftUseCase.getMyDrafts(boardId, query);
         return BaseResponse.ok(
-                getPostDraftUseCase.getMyDrafts(boardId).stream()
-                        .map(PostDraftResponse::from)
-                        .toList()
+                result.map(PostDraftResponse::from)
         );
     }
 

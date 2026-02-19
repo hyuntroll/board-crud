@@ -8,15 +8,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.request.SavePostDraftRequest;
 import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.response.PostDraftResponse;
 import pong.ios.boardcrud.global.data.BaseResponse;
-
-import java.util.List;
+import pong.ios.boardcrud.global.data.PageResult;
 
 public interface PostDraftControllerDocs {
     ResponseEntity<BaseResponse<PostDraftResponse>> saveDraft(@Valid @RequestBody SavePostDraftRequest request);
 
     ResponseEntity<BaseResponse<PostDraftResponse>> getDraft(@PathVariable Long draftId);
 
-    ResponseEntity<BaseResponse<List<PostDraftResponse>>> getMyDrafts(@RequestParam(required = false) Long boardId);
+    ResponseEntity<BaseResponse<PageResult<PostDraftResponse>>> getMyDrafts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "savedAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(required = false) Long boardId
+    );
 
     ResponseEntity<BaseResponse<Void>> deleteDraft(@PathVariable Long draftId);
 }

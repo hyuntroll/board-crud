@@ -1,6 +1,8 @@
 package pong.ios.boardcrud.adapter.out.persistence.post;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import pong.ios.boardcrud.adapter.out.persistence.post.mapper.PostDraftMapper;
 import pong.ios.boardcrud.adapter.out.persistence.post.repository.PostDraftRepository;
@@ -8,9 +10,12 @@ import pong.ios.boardcrud.application.port.out.postdraft.DeletePostDraftPort;
 import pong.ios.boardcrud.application.port.out.postdraft.LoadPostDraftPort;
 import pong.ios.boardcrud.application.port.out.postdraft.SavePostDraftPort;
 import pong.ios.boardcrud.domain.post.PostDraft;
+import pong.ios.boardcrud.global.data.PageQuery;
+import pong.ios.boardcrud.global.data.PageResult;
+import pong.ios.boardcrud.global.util.PageableUtils;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -28,17 +33,17 @@ public class PostDraftPersistenceAdapter implements
     }
 
     @Override
-    public List<PostDraft> findAllByUserId(Long userId) {
-        return postDraftRepository.findAllByUser_Id(userId).stream()
-                .map(postDraftMapper::toDomain)
-                .toList();
+    public PageResult<PostDraft> findAllByUserId(Long userId, PageQuery query) {
+        Page<PostDraft> page = postDraftRepository.findAllByUser_Id(userId, toPageable(query))
+                .map(postDraftMapper::toDomain);
+        return PageResult.from(page);
     }
 
     @Override
-    public List<PostDraft> findAllByUserIdAndBoardId(Long userId, Long boardId) {
-        return postDraftRepository.findAllByUser_IdAndBoard_Id(userId, boardId).stream()
-                .map(postDraftMapper::toDomain)
-                .toList();
+    public PageResult<PostDraft> findAllByUserIdAndBoardId(Long userId, Long boardId, PageQuery query) {
+        Page<PostDraft> page = postDraftRepository.findAllByUser_IdAndBoard_Id(userId, boardId, toPageable(query))
+                .map(postDraftMapper::toDomain);
+        return PageResult.from(page);
     }
 
     @Override
@@ -53,5 +58,10 @@ public class PostDraftPersistenceAdapter implements
     @Override
     public void delete(Long draftId) {
         postDraftRepository.deleteById(draftId);
+    }
+
+    private Pageable toPageable(PageQuery query) {
+        Set<String> sortableFields = Set.of("savedAt", "createdAt", "updatedAt");
+        return PageableUtils.toPageable(query, sortableFields, "savedAt");
     }
 }

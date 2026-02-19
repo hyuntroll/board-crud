@@ -24,6 +24,8 @@ import pong.ios.boardcrud.domain.user.User;
 import pong.ios.boardcrud.domain.user.UserRoleType;
 import pong.ios.boardcrud.domain.user.UserStatusCode;
 import pong.ios.boardcrud.global.exception.ApplicationException;
+import pong.ios.boardcrud.global.data.PageQuery;
+import pong.ios.boardcrud.global.data.PageResult;
 import pong.ios.boardcrud.global.infra.security.holder.SecurityHolder;
 
 import java.time.LocalDateTime;
@@ -100,18 +102,14 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
     }
 
     @Override
-    public List<PostResult> getPosts() {
-        return loadPostPort.findAll().stream()
-                .map(PostResult::from)
-                .toList();
+    public PageResult<PostResult> getPosts(PageQuery query) {
+        return loadPostPort.findAll(query).map(PostResult::from);
     }
 
     @Override
-    public List<PostResult> getPostsByBoard(Long boardId) {
+    public PageResult<PostResult> getPostsByBoard(Long boardId, PageQuery query) {
         getActiveBoard(boardId);
-        return loadPostPort.findAllByBoardId(boardId).stream()
-                .map(PostResult::from)
-                .toList();
+        return loadPostPort.findAllByBoardId(boardId, query).map(PostResult::from);
     }
 
     @Override

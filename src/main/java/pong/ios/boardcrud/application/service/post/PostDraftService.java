@@ -20,10 +20,11 @@ import pong.ios.boardcrud.domain.post.PostDraftStatusCode;
 import pong.ios.boardcrud.domain.user.User;
 import pong.ios.boardcrud.domain.user.UserStatusCode;
 import pong.ios.boardcrud.global.exception.ApplicationException;
+import pong.ios.boardcrud.global.data.PageQuery;
+import pong.ios.boardcrud.global.data.PageResult;
 import pong.ios.boardcrud.global.infra.security.holder.SecurityHolder;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -76,18 +77,14 @@ public class PostDraftService implements
     }
 
     @Override
-    public List<PostDraftResult> getMyDrafts(Long boardId) {
+    public PageResult<PostDraftResult> getMyDrafts(Long boardId, PageQuery query) {
         Long userId = securityHolder.getCurrentUserId();
         if (boardId == null) {
-            return loadPostDraftPort.findAllByUserId(userId).stream()
-                    .map(PostDraftResult::from)
-                    .toList();
+            return loadPostDraftPort.findAllByUserId(userId, query).map(PostDraftResult::from);
         }
 
         getBoard(boardId);
-        return loadPostDraftPort.findAllByUserIdAndBoardId(userId, boardId).stream()
-                .map(PostDraftResult::from)
-                .toList();
+        return loadPostDraftPort.findAllByUserIdAndBoardId(userId, boardId, query).map(PostDraftResult::from);
     }
 
     @Override

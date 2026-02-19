@@ -13,9 +13,10 @@ import pong.ios.boardcrud.application.port.in.post.CreatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.DeletePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.GetPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
+import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
 import pong.ios.boardcrud.global.data.BaseResponse;
-
-import java.util.List;
+import pong.ios.boardcrud.global.data.PageQuery;
+import pong.ios.boardcrud.global.data.PageResult;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,14 +38,19 @@ public class PostController implements PostControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<BaseResponse<List<PostSummary>>> getPosts(@RequestParam(required = false) Long boardId) {
-        List<PostSummary> data = (boardId == null
-                ? getPostUseCase.getPosts()
-                : getPostUseCase.getPostsByBoard(boardId)).stream()
-                .map(PostSummary::from)
-                .toList();
+    public ResponseEntity<BaseResponse<PageResult<PostSummary>>> getPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(required = false) Long boardId
+    ) {
+        PageQuery query = new PageQuery(page, size, sortBy, direction);
+        PageResult<PostResult> result = (boardId == null
+                ? getPostUseCase.getPosts(query)
+                : getPostUseCase.getPostsByBoard(boardId, query));
 
-        return BaseResponse.ok(data);
+        return BaseResponse.ok(result.map(PostSummary::from));
     }
 
     @Override
