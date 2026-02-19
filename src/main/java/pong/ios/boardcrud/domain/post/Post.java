@@ -30,6 +30,18 @@ public class Post {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public void pin(User user) {
+        pinnedBy = user;
+        pinnedAt = LocalDateTime.now();
+        isPinned = true;
+    }
+
+    public void unpin() {
+        pinnedBy = null;
+        pinnedAt = null;
+        isPinned = false;
+    }
+
     public void updateEditableFields(String title, String content, String category, List<String> tags, LocalDateTime updatedAt) {
         this.title = title;
         this.content = content;

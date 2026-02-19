@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pong.ios.boardcrud.application.port.in.post.CreatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.DeletePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.GetPostUseCase;
+import pong.ios.boardcrud.application.port.in.post.PinPostUseCase;
+import pong.ios.boardcrud.application.port.in.post.UnpinPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.dto.CreatePostCommand;
 import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
@@ -34,7 +36,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PostService implements CreatePostUseCase, UpdatePostUseCase, DeletePostUseCase, GetPostUseCase {
+public class PostService implements
+        CreatePostUseCase,
+        UpdatePostUseCase,
+        DeletePostUseCase,
+        GetPostUseCase,
+        PinPostUseCase,
+        UnpinPostUseCase {
     private final LoadPostPort loadPostPort;
     private final SavePostPort savePostPort;
     private final LoadUserPort loadUserPort;
@@ -119,6 +127,35 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
         return PostResult.from(post);
     }
 
+    @Override
+    @Transactional
+    public void pinPost(Long postId) {
+        Post post = getPost(postId);
+        validateNotDeleted(post);
+
+        User user = getCurrentUser();
+        validatePin(post.getBoard().getId(), user);
+
+        post.pin(user);
+        savePostPort.save(post);
+    }
+
+    @Override
+    @Transactional
+    public void unpinPost(Long postId) {
+        Post post = getPost(postId);
+        validateNotDeleted(post);
+
+        User user = getCurrentUser();
+        validatePin(post.getBoard().getId(), user);
+
+        if (!post.isPinned()) {
+            return;
+        }
+        post.unpin();
+        savePostPort.save(post);
+    }
+
     private Post getPost(Long postId) {
         return loadPostPort.findById(postId)
                 .orElseThrow(() -> new ApplicationException(PostErrorStatusCode.POST_NOT_FOUND));
@@ -150,6 +187,14 @@ public class PostService implements CreatePostUseCase, UpdatePostUseCase, Delete
         boolean isAdmin = requester.getRole() == UserRoleType.ADMIN;
         boolean isBoardManager = loadBoardManagerPort.existsById(post.getBoard().getId(), requester.getId());
         if (!isWriter && !isAdmin && !isBoardManager) {
+            throw new ApplicationException(PostErrorStatusCode.POST_FORBIDDEN);
+        }
+    }
+
+    private void validatePin(Long boardId, User requester) {
+        boolean isBoardManager = loadBoardManagerPort.existsById(boardId, requester.getId());
+        boolean isAdmin = requester.getRole() == UserRoleType.ADMIN;
+        if (!isBoardManager && !isAdmin) {
             throw new ApplicationException(PostErrorStatusCode.POST_FORBIDDEN);
         }
     }

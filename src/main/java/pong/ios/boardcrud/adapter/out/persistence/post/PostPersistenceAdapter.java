@@ -2,7 +2,9 @@ package pong.ios.boardcrud.adapter.out.persistence.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import pong.ios.boardcrud.adapter.out.persistence.post.mapper.PostMapper;
 import pong.ios.boardcrud.adapter.out.persistence.post.repository.PostRepository;
@@ -63,6 +65,8 @@ public class PostPersistenceAdapter implements LoadPostPort, SavePostPort {
 
     private Pageable toPageable(PageQuery query) {
         Set<String> sortableFields = Set.of("createdAt", "updatedAt", "viewCount", "likeCount", "commentCount");
-        return PageableUtils.toPageable(query, sortableFields, "createdAt");
+        Pageable pageable = PageableUtils.toPageable(query, sortableFields, "createdAt");
+        Sort sort = Sort.by(Sort.Direction.DESC, "isPinned").and(pageable.getSort());
+        return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
     }
 }

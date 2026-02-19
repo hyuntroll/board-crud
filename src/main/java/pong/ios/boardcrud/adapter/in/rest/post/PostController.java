@@ -12,7 +12,9 @@ import pong.ios.boardcrud.adapter.in.rest.post.dto.response.PostSummary;
 import pong.ios.boardcrud.application.port.in.post.CreatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.DeletePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.GetPostUseCase;
+import pong.ios.boardcrud.application.port.in.post.PinPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
+import pong.ios.boardcrud.application.port.in.post.UnpinPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
 import pong.ios.boardcrud.global.data.BaseResponse;
 import pong.ios.boardcrud.global.data.PageQuery;
@@ -26,6 +28,8 @@ public class PostController implements PostControllerDocs {
     private final GetPostUseCase getPostUseCase;
     private final UpdatePostUseCase updatePostUseCase;
     private final DeletePostUseCase deletePostUseCase;
+    private final PinPostUseCase pinPostUseCase;
+    private final UnpinPostUseCase unpinPostUseCase;
 
     @Override
     @PostMapping
@@ -73,5 +77,19 @@ public class PostController implements PostControllerDocs {
     public ResponseEntity<BaseResponse<Void>> deletePost(@PathVariable Long postId) {
         deletePostUseCase.deletePost(postId);
         return BaseResponse.ok("게시글이 삭제되었습니다.");
+    }
+
+    @Override
+    @PatchMapping("/{postId}/pin")
+    public ResponseEntity<BaseResponse<Void>> pinPost(@PathVariable Long postId) {
+        pinPostUseCase.pinPost(postId);
+        return BaseResponse.ok("게시글이 상단 고정되었습니다.");
+    }
+
+    @Override
+    @PatchMapping("/{postId}/unpin")
+    public ResponseEntity<BaseResponse<Void>> unpinPost(@PathVariable Long postId) {
+        unpinPostUseCase.unpinPost(postId);
+        return BaseResponse.ok("게시글 상단 고정이 해제되었습니다.");
     }
 }

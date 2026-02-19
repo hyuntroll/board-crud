@@ -28,4 +28,8 @@ public interface PostControllerDocs {
     ResponseEntity<BaseResponse<PostResponse>> updatePost(@PathVariable Long postId, @Valid @RequestBody UpdatePostRequest request);
 
     ResponseEntity<BaseResponse<Void>> deletePost(@PathVariable Long postId);
+
+    ResponseEntity<BaseResponse<Void>> pinPost(@PathVariable Long postId);
+
+    ResponseEntity<BaseResponse<Void>> unpinPost(@PathVariable Long postId);
 }
