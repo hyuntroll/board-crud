@@ -15,6 +15,8 @@ import pong.ios.boardcrud.application.port.in.post.GetPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.PinPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UnpinPostUseCase;
+import pong.ios.boardcrud.application.port.in.like.LikePostUseCase;
+import pong.ios.boardcrud.application.port.in.like.UnlikePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
 import pong.ios.boardcrud.global.data.BaseResponse;
 import pong.ios.boardcrud.global.data.PageQuery;
@@ -30,6 +32,8 @@ public class PostController implements PostControllerDocs {
     private final DeletePostUseCase deletePostUseCase;
     private final PinPostUseCase pinPostUseCase;
     private final UnpinPostUseCase unpinPostUseCase;
+    private final LikePostUseCase likePostUseCase;
+    private final UnlikePostUseCase unlikePostUseCase;
 
     @Override
     @PostMapping
@@ -91,5 +95,19 @@ public class PostController implements PostControllerDocs {
     public ResponseEntity<BaseResponse<Void>> unpinPost(@PathVariable Long postId) {
         unpinPostUseCase.unpinPost(postId);
         return BaseResponse.ok("게시글 상단 고정이 해제되었습니다.");
+    }
+
+    @Override
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<BaseResponse<Void>> likePost(@PathVariable Long postId) {
+        likePostUseCase.likePost(postId);
+        return BaseResponse.ok("게시글 좋아요를 눌렀습니다.");
+    }
+
+    @Override
+    @DeleteMapping("/{postId}/likes")
+    public ResponseEntity<BaseResponse<Void>> unlikePost(@PathVariable Long postId) {
+        unlikePostUseCase.unlikePost(postId);
+        return BaseResponse.ok("게시글 좋아요를 취소했습니다.");
     }
 }

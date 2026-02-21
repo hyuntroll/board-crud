@@ -14,11 +14,15 @@ import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
 import pong.ios.boardcrud.application.port.in.post.dto.UpdatePostCommand;
 import pong.ios.boardcrud.application.port.out.board.LoadBoardManagerPort;
 import pong.ios.boardcrud.application.port.out.board.LoadBoardPort;
+import pong.ios.boardcrud.application.port.out.comment.LoadCommentPort;
+import pong.ios.boardcrud.application.port.out.comment.SaveCommentPort;
 import pong.ios.boardcrud.application.port.out.post.LoadPostPort;
 import pong.ios.boardcrud.application.port.out.post.SavePostPort;
 import pong.ios.boardcrud.application.port.out.user.LoadUserPort;
 import pong.ios.boardcrud.domain.board.Board;
 import pong.ios.boardcrud.domain.board.BoardStatusCode;
+import pong.ios.boardcrud.domain.comment.Comment;
+import pong.ios.boardcrud.domain.comment.CommentStatus;
 import pong.ios.boardcrud.domain.post.Post;
 import pong.ios.boardcrud.domain.post.PostErrorStatusCode;
 import pong.ios.boardcrud.domain.post.PostStatus;
@@ -48,6 +52,8 @@ public class PostService implements
     private final LoadUserPort loadUserPort;
     private final LoadBoardManagerPort loadBoardManagerPort;
     private final LoadBoardPort loadBoardPort;
+    private final LoadCommentPort loadCommentPort;
+    private final SaveCommentPort saveCommentPort;
     private final SecurityHolder securityHolder;
 
     @Override
@@ -105,6 +111,17 @@ public class PostService implements
         validateNotDeleted(post);
         validateDeletable(post, requester);
         LocalDateTime now = LocalDateTime.now();
+
+        List<Comment> comments = loadCommentPort.findAllByPostId(postId);
+        if (!comments.isEmpty()) {
+            comments.stream()
+                    .filter(comment -> comment.getStatus() != CommentStatus.DELETED)
+                    .forEach(comment -> comment.softDelete(now));
+            saveCommentPort.saveAll(comments);
+            post.resetCommentCount();
+        }
+
+        post.updateEditedAt(now);
         post.softDelete(now, now);
         savePostPort.save(post);
     }
