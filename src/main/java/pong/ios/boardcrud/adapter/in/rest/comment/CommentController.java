@@ -16,8 +16,8 @@ import pong.ios.boardcrud.application.port.in.comment.dto.CommentResult;
 import pong.ios.boardcrud.application.port.in.like.LikeCommentUseCase;
 import pong.ios.boardcrud.application.port.in.like.UnlikeCommentUseCase;
 import pong.ios.boardcrud.global.data.BaseResponse;
-import pong.ios.boardcrud.global.data.PageQuery;
-import pong.ios.boardcrud.global.data.PageResult;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,16 +40,20 @@ public class CommentController implements CommentControllerDocs {
 
     @Override
     @GetMapping("/api/v1/posts/{postId}/comments")
-    public ResponseEntity<BaseResponse<PageResult<CommentResponse>>> getCommentsByPost(
-            @PathVariable Long postId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "desc") String direction
-    ) {
-        PageQuery query = new PageQuery(page, size, sortBy, direction);
-        PageResult<CommentResult> result = getCommentUseCase.getCommentsByPost(postId, query);
-        return BaseResponse.ok(result.map(CommentResponse::from));
+    public ResponseEntity<BaseResponse<List<CommentResponse>>> getCommentsByPost(@PathVariable Long postId) {
+        List<CommentResponse> roots = getCommentUseCase.getCommentsByPost(postId).stream()
+                .map(CommentResponse::from)
+                .toList();
+        return BaseResponse.ok(roots);
+    }
+
+    @Override
+    @GetMapping("/api/v1/comments/{commentId}/replies")
+    public ResponseEntity<BaseResponse<List<CommentResponse>>> getReplies(@PathVariable Long commentId) {
+        List<CommentResponse> replies = getCommentUseCase.getReplies(commentId).stream()
+                .map(CommentResponse::from)
+                .toList();
+        return BaseResponse.ok(replies);
     }
 
     @Override

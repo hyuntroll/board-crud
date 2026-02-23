@@ -24,12 +24,14 @@ import pong.ios.boardcrud.domain.post.PostStatus;
 import pong.ios.boardcrud.domain.user.User;
 import pong.ios.boardcrud.domain.user.UserRoleType;
 import pong.ios.boardcrud.domain.user.UserStatusCode;
-import pong.ios.boardcrud.global.data.PageQuery;
-import pong.ios.boardcrud.global.data.PageResult;
 import pong.ios.boardcrud.global.exception.ApplicationException;
 import pong.ios.boardcrud.global.infra.security.holder.SecurityHolder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,13 +54,8 @@ public class CommentService implements
         User user = getCurrentUser();
         Post post = getPublishedPost(command.postId());
 
-        Comment parent = null;
         if (command.parentId() != null) {
-            parent = loadCommentPort.findById(command.parentId())
-                    .orElseThrow(() -> new ApplicationException(CommentStatusCode.COMMENT_PARENT_NOT_FOUND));
-            if (!parent.getPost().getId().equals(command.postId())) {
-                throw new ApplicationException(CommentStatusCode.COMMENT_PARENT_MISMATCH);
-            }
+            throw new ApplicationException(CommentStatusCode.COMMENT_REPLY_NOT_ALLOWED);
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -66,7 +63,7 @@ public class CommentService implements
                 Comment.builder()
                         .post(post)
                         .user(user)
-                        .parent(parent)
+                        .parent(null)
                         .content(command.content())
                         .status(CommentStatus.ACTIVE)
                         .likeCount(0)
@@ -96,29 +93,69 @@ public class CommentService implements
     @Transactional
     public void deleteComment(Long commentId) {
         User user = getCurrentUser();
-        Comment comment = getComment(commentId);
-        validateNotDeleted(comment);
+        Comment root = getComment(commentId);
+        validateNotDeleted(root);
 
-        boolean isWriter = comment.getUser().getId().equals(user.getId());
+        boolean isWriter = root.getUser().getId().equals(user.getId());
         boolean isAdmin = user.getRole() == UserRoleType.ADMIN;
         if (!isWriter && !isAdmin) {
             throw new ApplicationException(CommentStatusCode.COMMENT_FORBIDDEN);
         }
 
         LocalDateTime now = LocalDateTime.now();
-        comment.softDelete(now);
-        saveCommentPort.save(comment);
+        List<Comment> targets = new ArrayList<>();
+        targets.add(root);
+        targets.addAll(collectDescendants(root.getId()));
 
-        Post post = getPublishedPost(comment.getPost().getId());
-        post.decreaseCommentCount();
+        long deletedActiveCount = targets.stream()
+                .filter(comment -> comment.getStatus() != CommentStatus.DELETED)
+                .peek(comment -> comment.softDelete(now))
+                .count();
+
+        saveCommentPort.saveAll(targets);
+
+        Post post = getPublishedPost(root.getPost().getId());
+        for (long i = 0; i < deletedActiveCount; i++) {
+            post.decreaseCommentCount();
+        }
         post.updateEditedAt(now);
         savePostPort.save(post);
     }
 
     @Override
-    public PageResult<CommentResult> getCommentsByPost(Long postId, PageQuery query) {
+    public List<CommentResult> getCommentsByPost(Long postId) {
         getPublishedPost(postId);
-        return loadCommentPort.findAllByPostId(postId, query).map(CommentResult::from);
+        return loadCommentPort.findAllByPostId(postId).stream()
+                .filter(comment -> comment.getParent() == null)
+                .map(CommentResult::from)
+                .toList();
+    }
+
+    @Override
+    public List<CommentResult> getReplies(Long commentId) {
+        Comment parent = getComment(commentId);
+        validateNotDeleted(parent);
+
+        return loadCommentPort.findAllByParentId(commentId).stream()
+                .map(CommentResult::from)
+                .toList();
+    }
+
+    private List<Comment> collectDescendants(Long rootId) {
+        List<Comment> descendants = new ArrayList<>();
+        Deque<Long> queue = new ArrayDeque<>();
+        queue.add(rootId);
+
+        while (!queue.isEmpty()) {
+            Long parentId = queue.poll();
+            List<Comment> children = loadCommentPort.findAllByParentId(parentId);
+            descendants.addAll(children);
+            children.stream()
+                    .map(Comment::getId)
+                    .forEach(queue::add);
+        }
+
+        return descendants;
     }
 
     private Comment getComment(Long commentId) {
