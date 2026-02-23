@@ -32,4 +32,8 @@ public interface PostControllerDocs {
     ResponseEntity<BaseResponse<Void>> pinPost(@PathVariable Long postId);
 
     ResponseEntity<BaseResponse<Void>> unpinPost(@PathVariable Long postId);
+
+    ResponseEntity<BaseResponse<Void>> likePost(@PathVariable Long postId);
+
+    ResponseEntity<BaseResponse<Void>> unlikePost(@PathVariable Long postId);
 }
