@@ -3,7 +3,6 @@ package pong.ios.boardcrud.adapter.in.rest.auth.docs;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +30,8 @@ public interface AuthControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "400", description = "요청값 검증 실패"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "403", description = "권한 없음")
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 리프레시 토큰")
     })
-    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/logout")
     ResponseEntity<BaseResponse<Void>> logout(@Valid @RequestBody LogoutRequest request);
 
