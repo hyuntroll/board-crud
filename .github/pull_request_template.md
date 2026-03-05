@@ -10,4 +10,4 @@
 
 ## 이슈 링크
 
-- [레포 이름 #이슈번호](이슈 주소)
+- [board-crud#?](https://github.com/hyuntroll/board-crud/issues/?)
