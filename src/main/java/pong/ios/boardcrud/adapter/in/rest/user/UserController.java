@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pong.ios.boardcrud.adapter.in.rest.common.ApiResponse;
 import pong.ios.boardcrud.adapter.in.rest.user.docs.UserControllerDocs;
 import pong.ios.boardcrud.adapter.in.rest.user.dto.request.SignupUserRequest;
 import pong.ios.boardcrud.adapter.in.rest.user.dto.response.UserResponse;
@@ -26,7 +27,7 @@ public class UserController implements UserControllerDocs {
     ) {
         UserResult result = createUserUseCase.createUser(request.toCommand());
 
-        return BaseResponse.created(
+        return ApiResponse.created(
                 "계정이 정상적으로 생성되었습니다.",
                 UserResponse.from(result)
         );

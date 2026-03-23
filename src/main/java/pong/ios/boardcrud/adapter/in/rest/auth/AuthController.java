@@ -12,6 +12,7 @@ import pong.ios.boardcrud.adapter.in.rest.auth.docs.AuthControllerDocs;
 import pong.ios.boardcrud.adapter.in.rest.auth.dto.request.LoginRequest;
 import pong.ios.boardcrud.adapter.in.rest.auth.dto.request.LogoutRequest;
 import pong.ios.boardcrud.adapter.in.rest.auth.dto.request.ReissueRequest;
+import pong.ios.boardcrud.adapter.in.rest.common.ApiResponse;
 import pong.ios.boardcrud.application.port.in.auth.LoginUseCase;
 import pong.ios.boardcrud.application.port.in.auth.LogoutUseCase;
 import pong.ios.boardcrud.application.port.in.auth.ReissueTokenUseCase;
@@ -29,7 +30,7 @@ public class AuthController implements AuthControllerDocs {
     @PostMapping("/login")
     @Override
     public ResponseEntity<BaseResponse<JwtPayload>> login(@Valid @RequestBody LoginRequest request) {
-        return BaseResponse.ok(
+        return ApiResponse.ok(
             loginUseCase.login(request.loginId(), request.password())
         );
     }
@@ -39,13 +40,13 @@ public class AuthController implements AuthControllerDocs {
     public ResponseEntity<BaseResponse<Void>> logout(@Valid @RequestBody LogoutRequest request) {
         logoutUseCase.logout(request.refreshToken());
 
-        return BaseResponse.ok("정상적으로 로그아웃 되었습니다.");
+        return ApiResponse.ok("정상적으로 로그아웃 되었습니다.");
     }
 
     @PostMapping("/reissue")
     @Override
     public ResponseEntity<BaseResponse<JwtPayload>> reissue(@Valid @RequestBody ReissueRequest request) {
-        return BaseResponse.ok(
+        return ApiResponse.ok(
                 reissueTokenUseCase.reissueToken(request.refreshToken())
         );
     }

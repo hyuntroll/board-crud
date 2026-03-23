@@ -8,6 +8,7 @@ import pong.ios.boardcrud.adapter.in.rest.comment.docs.CommentControllerDocs;
 import pong.ios.boardcrud.adapter.in.rest.comment.dto.request.CreateCommentRequest;
 import pong.ios.boardcrud.adapter.in.rest.comment.dto.request.UpdateCommentRequest;
 import pong.ios.boardcrud.adapter.in.rest.comment.dto.response.CommentResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.ApiResponse;
 import pong.ios.boardcrud.application.port.in.comment.CreateCommentUseCase;
 import pong.ios.boardcrud.application.port.in.comment.DeleteCommentUseCase;
 import pong.ios.boardcrud.application.port.in.comment.GetCommentUseCase;
@@ -31,7 +32,7 @@ public class CommentController implements CommentControllerDocs {
     @Override
     @PostMapping("/api/v1/posts/{postId}/comments")
     public ResponseEntity<BaseResponse<CommentResponse>> createComment(@PathVariable Long postId, @Valid @RequestBody CreateCommentRequest request) {
-        return BaseResponse.created(
+        return ApiResponse.created(
                 "댓글이 작성되었습니다.",
                 CommentResponse.from(createCommentUseCase.createComment(request.toCommand(postId)))
         );
@@ -43,7 +44,7 @@ public class CommentController implements CommentControllerDocs {
         List<CommentResponse> roots = getCommentUseCase.getCommentsByPost(postId).stream()
                 .map(CommentResponse::from)
                 .toList();
-        return BaseResponse.ok(roots);
+        return ApiResponse.ok(roots);
     }
 
     @Override
@@ -52,13 +53,13 @@ public class CommentController implements CommentControllerDocs {
         List<CommentResponse> replies = getCommentUseCase.getReplies(commentId).stream()
                 .map(CommentResponse::from)
                 .toList();
-        return BaseResponse.ok(replies);
+        return ApiResponse.ok(replies);
     }
 
     @Override
     @PutMapping("/api/v1/comments/{commentId}")
     public ResponseEntity<BaseResponse<CommentResponse>> updateComment(@PathVariable Long commentId, @Valid @RequestBody UpdateCommentRequest request) {
-        return BaseResponse.ok(
+        return ApiResponse.ok(
                 "댓글이 수정되었습니다.",
                 CommentResponse.from(updateCommentUseCase.updateComment(request.toCommand(commentId)))
         );
@@ -68,20 +69,20 @@ public class CommentController implements CommentControllerDocs {
     @DeleteMapping("/api/v1/comments/{commentId}")
     public ResponseEntity<BaseResponse<Void>> deleteComment(@PathVariable Long commentId) {
         deleteCommentUseCase.deleteComment(commentId);
-        return BaseResponse.ok("댓글이 삭제되었습니다.");
+        return ApiResponse.ok("댓글이 삭제되었습니다.");
     }
 
     @Override
     @PostMapping("/api/v1/comments/{commentId}/likes")
     public ResponseEntity<BaseResponse<Void>> likeComment(@PathVariable Long commentId) {
         likeCommentUseCase.likeComment(commentId);
-        return BaseResponse.ok("댓글 좋아요를 눌렀습니다.");
+        return ApiResponse.ok("댓글 좋아요를 눌렀습니다.");
     }
 
     @Override
     @DeleteMapping("/api/v1/comments/{commentId}/likes")
     public ResponseEntity<BaseResponse<Void>> unlikeComment(@PathVariable Long commentId) {
         unlikeCommentUseCase.unlikeComment(commentId);
-        return BaseResponse.ok("댓글 좋아요를 취소했습니다.");
+        return ApiResponse.ok("댓글 좋아요를 취소했습니다.");
     }
 }

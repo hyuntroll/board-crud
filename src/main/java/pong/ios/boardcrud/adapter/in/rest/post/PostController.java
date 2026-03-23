@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pong.ios.boardcrud.adapter.in.rest.common.ApiResponse;
 import pong.ios.boardcrud.adapter.in.rest.post.docs.PostControllerDocs;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.request.CreatePostRequest;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostCommentPolicyRequest;
@@ -44,7 +45,7 @@ public class PostController implements PostControllerDocs {
     @Override
     @PostMapping
     public ResponseEntity<BaseResponse<PostResponse>> createPost(@Valid @RequestBody CreatePostRequest request) {
-        return BaseResponse.created(
+        return ApiResponse.created(
                 "게시글이 작성되었습니다.",
                 PostResponse.from(createPostUseCase.createPost(request.toCommand()))
         );
@@ -64,19 +65,19 @@ public class PostController implements PostControllerDocs {
                 ? getPostUseCase.getPosts(query)
                 : getPostUseCase.getPostsByBoard(boardId, query));
 
-        return BaseResponse.ok(result.map(PostSummary::from));
+        return ApiResponse.ok(result.map(PostSummary::from));
     }
 
     @Override
     @GetMapping("/{postId}")
     public ResponseEntity<BaseResponse<PostResponse>> getPostDetail(@PathVariable Long postId) {
-        return BaseResponse.ok(PostResponse.from(getPostUseCase.getPostDetail(postId)));
+        return ApiResponse.ok(PostResponse.from(getPostUseCase.getPostDetail(postId)));
     }
 
     @Override
     @PutMapping("/{postId}")
     public ResponseEntity<BaseResponse<PostResponse>> updatePost(@PathVariable Long postId, @Valid @RequestBody UpdatePostRequest request) {
-        return BaseResponse.ok(
+        return ApiResponse.ok(
                 "게시글이 수정되었습니다.",
                 PostResponse.from(updatePostUseCase.updatePost(request.toCommand(postId)))
         );
@@ -86,48 +87,48 @@ public class PostController implements PostControllerDocs {
     @DeleteMapping("/{postId}")
     public ResponseEntity<BaseResponse<Void>> deletePost(@PathVariable Long postId) {
         deletePostUseCase.deletePost(postId);
-        return BaseResponse.ok("게시글이 삭제되었습니다.");
+        return ApiResponse.ok("게시글이 삭제되었습니다.");
     }
 
     @Override
     @PatchMapping("/{postId}/pin")
     public ResponseEntity<BaseResponse<Void>> pinPost(@PathVariable Long postId) {
         pinPostUseCase.pinPost(postId);
-        return BaseResponse.ok("게시글이 상단 고정되었습니다.");
+        return ApiResponse.ok("게시글이 상단 고정되었습니다.");
     }
 
     @Override
     @PatchMapping("/{postId}/unpin")
     public ResponseEntity<BaseResponse<Void>> unpinPost(@PathVariable Long postId) {
         unpinPostUseCase.unpinPost(postId);
-        return BaseResponse.ok("게시글 상단 고정이 해제되었습니다.");
+        return ApiResponse.ok("게시글 상단 고정이 해제되었습니다.");
     }
 
     @Override
     @PostMapping("/{postId}/likes")
     public ResponseEntity<BaseResponse<Void>> likePost(@PathVariable Long postId) {
         likePostUseCase.likePost(postId);
-        return BaseResponse.ok("게시글 좋아요를 눌렀습니다.");
+        return ApiResponse.ok("게시글 좋아요를 눌렀습니다.");
     }
 
     @Override
     @DeleteMapping("/{postId}/likes")
     public ResponseEntity<BaseResponse<Void>> unlikePost(@PathVariable Long postId) {
         unlikePostUseCase.unlikePost(postId);
-        return BaseResponse.ok("게시글 좋아요를 취소했습니다.");
+        return ApiResponse.ok("게시글 좋아요를 취소했습니다.");
     }
 
     @Override
     @PatchMapping("/{postId}/visibility")
     public ResponseEntity<BaseResponse<Void>> updateVisibility(@PathVariable Long postId, @Valid @RequestBody UpdatePostVisibilityRequest request) {
         updatePostVisibilityUseCase.updateVisibility(postId, request.isPublic());
-        return BaseResponse.ok("게시글 공개 설정이 변경되었습니다.");
+        return ApiResponse.ok("게시글 공개 설정이 변경되었습니다.");
     }
 
     @Override
     @PatchMapping("/{postId}/comment-policy")
     public ResponseEntity<BaseResponse<Void>> updateCommentPolicy(@PathVariable Long postId, @Valid @RequestBody UpdatePostCommentPolicyRequest request) {
         updatePostCommentPolicyUseCase.updateCommentPolicy(postId, request.isCommentAllowed());
-        return BaseResponse.ok("게시글 댓글 허용 설정이 변경되었습니다.");
+        return ApiResponse.ok("게시글 댓글 허용 설정이 변경되었습니다.");
     }
 }

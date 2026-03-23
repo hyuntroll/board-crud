@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pong.ios.boardcrud.adapter.in.rest.common.ApiResponse;
 import pong.ios.boardcrud.adapter.in.rest.postdraft.docs.PostDraftControllerDocs;
 import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.request.SavePostDraftRequest;
 import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.response.PostDraftResponse;
@@ -26,7 +27,7 @@ public class PostDraftController implements PostDraftControllerDocs {
     @Override
     @PostMapping
     public ResponseEntity<BaseResponse<PostDraftResponse>> saveDraft(@Valid @RequestBody SavePostDraftRequest request) {
-        return BaseResponse.ok(
+        return ApiResponse.ok(
                 "임시 저장되었습니다.",
                 PostDraftResponse.from(savePostDraftUseCase.saveDraft(request.toCommand()))
         );
@@ -35,7 +36,7 @@ public class PostDraftController implements PostDraftControllerDocs {
     @Override
     @GetMapping("/{draftId}")
     public ResponseEntity<BaseResponse<PostDraftResponse>> getDraft(@PathVariable Long draftId) {
-        return BaseResponse.ok(
+        return ApiResponse.ok(
                 PostDraftResponse.from(getPostDraftUseCase.getDraft(draftId))
         );
     }
@@ -51,7 +52,7 @@ public class PostDraftController implements PostDraftControllerDocs {
     ) {
         PageQuery query = new PageQuery(page, size, sortBy, direction);
         PageResult<PostDraftResult> result = getPostDraftUseCase.getMyDrafts(boardId, query);
-        return BaseResponse.ok(
+        return ApiResponse.ok(
                 result.map(PostDraftResponse::from)
         );
     }
@@ -60,6 +61,6 @@ public class PostDraftController implements PostDraftControllerDocs {
     @DeleteMapping("/{draftId}")
     public ResponseEntity<BaseResponse<Void>> deleteDraft(@PathVariable Long draftId) {
         deletePostDraftUseCase.deleteDraft(draftId);
-        return BaseResponse.ok("임시 저장글이 삭제되었습니다.");
+        return ApiResponse.ok("임시 저장글이 삭제되었습니다.");
     }
 }
