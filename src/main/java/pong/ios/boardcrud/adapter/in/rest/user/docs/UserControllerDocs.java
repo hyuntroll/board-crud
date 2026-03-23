@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import pong.ios.boardcrud.adapter.in.rest.user.dto.request.SignupUserRequest;
 import pong.ios.boardcrud.adapter.in.rest.user.dto.response.UserResponse;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 
 @Tag(name = "User", description = "회원 API")
 public interface UserControllerDocs {

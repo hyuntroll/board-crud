@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.request.SavePostDraftRequest;
 import pong.ios.boardcrud.adapter.in.rest.postdraft.dto.response.PostDraftResponse;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 import pong.ios.boardcrud.global.data.PageResult;
 
 @Tag(name = "PostDraft", description = "게시글 임시저장 API")

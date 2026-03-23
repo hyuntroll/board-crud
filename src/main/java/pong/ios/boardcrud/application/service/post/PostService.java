@@ -9,6 +9,8 @@ import pong.ios.boardcrud.application.port.in.post.GetPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.PinPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UnpinPostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
+import pong.ios.boardcrud.application.port.in.postsetting.UpdatePostCommentPolicyUseCase;
+import pong.ios.boardcrud.application.port.in.postsetting.UpdatePostVisibilityUseCase;
 import pong.ios.boardcrud.application.port.in.post.dto.CreatePostCommand;
 import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
 import pong.ios.boardcrud.application.port.in.post.dto.UpdatePostCommand;
@@ -46,7 +48,9 @@ public class PostService implements
         DeletePostUseCase,
         GetPostUseCase,
         PinPostUseCase,
-        UnpinPostUseCase {
+        UnpinPostUseCase,
+        UpdatePostVisibilityUseCase,
+        UpdatePostCommentPolicyUseCase {
     private final LoadPostPort loadPostPort;
     private final SavePostPort savePostPort;
     private final LoadUserPort loadUserPort;
@@ -72,6 +76,9 @@ public class PostService implements
                         .category(command.category())
                         .tags(normalizeTags(command.tags()))
                         .status(PostStatus.PUBLISHED)
+                        .isPublic(true)
+                        .isCommentAllowed(true)
+                        .isBlinded(false)
                         .isPinned(false)
                         .viewCount(0)
                         .likeCount(0)
@@ -139,9 +146,33 @@ public class PostService implements
 
     @Override
     public PostResult getPostDetail(Long postId) {
+        User requester = getCurrentUserOrNull();
         Post post = getPost(postId);
         validateNotDeleted(post);
+        validateReadable(post, requester);
         return PostResult.from(post);
+    }
+
+    @Override
+    @Transactional
+    public void updateVisibility(Long postId, boolean isPublic) {
+        User requester = getCurrentUser();
+        Post post = getPost(postId);
+        validateNotDeleted(post);
+        validateWritable(post, requester);
+        post.changeVisibility(isPublic, LocalDateTime.now());
+        savePostPort.save(post);
+    }
+
+    @Override
+    @Transactional
+    public void updateCommentPolicy(Long postId, boolean isCommentAllowed) {
+        User requester = getCurrentUser();
+        Post post = getPost(postId);
+        validateNotDeleted(post);
+        validateWritable(post, requester);
+        post.changeCommentPolicy(isCommentAllowed, LocalDateTime.now());
+        savePostPort.save(post);
     }
 
     @Override
@@ -184,6 +215,15 @@ public class PostService implements
                 .orElseThrow(() -> new ApplicationException(UserStatusCode.USER_NOT_FOUND));
     }
 
+    private User getCurrentUserOrNull() {
+        try {
+            Long currentUserId = securityHolder.getCurrentUserId();
+            return loadUserPort.findById(currentUserId).orElse(null);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
     private Board getActiveBoard(Long boardId) {
         Board board = loadBoardPort.findById(boardId)
                 .orElseThrow(() -> new ApplicationException(BoardStatusCode.BOARD_NOT_FOUND));
@@ -195,6 +235,29 @@ public class PostService implements
 
     private void validateWriter(Post post, Long requesterId) {
         if (!post.getUser().getId().equals(requesterId)) {
+            throw new ApplicationException(PostErrorStatusCode.POST_FORBIDDEN);
+        }
+    }
+
+    private void validateWritable(Post post, User requester) {
+        boolean isWriter = post.getUser().getId().equals(requester.getId());
+        boolean isAdmin = requester.getRole() == UserRoleType.ADMIN;
+        if (!isWriter && !isAdmin) {
+            throw new ApplicationException(PostErrorStatusCode.POST_FORBIDDEN);
+        }
+    }
+
+    private void validateReadable(Post post, User requester) {
+        if (post.isPublic() && !post.isBlinded()) {
+            return;
+        }
+        if (requester == null) {
+            throw new ApplicationException(PostErrorStatusCode.POST_FORBIDDEN);
+        }
+        boolean isWriter = post.getUser().getId().equals(requester.getId());
+        boolean isAdmin = requester.getRole() == UserRoleType.ADMIN;
+        boolean isBoardManager = loadBoardManagerPort.existsById(post.getBoard().getId(), requester.getId());
+        if (!isWriter && !isAdmin && !isBoardManager) {
             throw new ApplicationException(PostErrorStatusCode.POST_FORBIDDEN);
         }
     }

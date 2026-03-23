@@ -12,7 +12,7 @@ import pong.ios.boardcrud.application.port.in.postdraft.GetPostDraftUseCase;
 import pong.ios.boardcrud.application.port.in.postdraft.SavePostDraftUseCase;
 import pong.ios.boardcrud.global.data.PageQuery;
 import pong.ios.boardcrud.global.data.PageResult;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 import pong.ios.boardcrud.application.port.in.postdraft.dto.PostDraftResult;
 
 @RestController

@@ -29,6 +29,12 @@ public record PostResponse(
         List<String> tags,
         @Schema(description = "게시글 상태")
         PostStatus status,
+        @Schema(description = "공개 여부", example = "true")
+        boolean isPublic,
+        @Schema(description = "댓글 허용 여부", example = "true")
+        boolean isCommentAllowed,
+        @Schema(description = "블라인드 여부", example = "false")
+        boolean isBlinded,
         @Schema(description = "조회수", example = "0")
         int viewCount,
         @Schema(description = "좋아요 수", example = "0")
@@ -54,6 +60,9 @@ public record PostResponse(
                 result.category(),
                 result.tags(),
                 result.status(),
+                result.isPublic(),
+                result.isCommentAllowed(),
+                result.isBlinded(),
                 result.viewCount(),
                 result.likeCount(),
                 result.commentCount(),

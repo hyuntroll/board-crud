@@ -19,6 +19,8 @@ public record PostSummary(
         String writerNickname,
         @Schema(description = "상단 고정 여부", example = "false")
         boolean isPinned,
+        @Schema(description = "블라인드 여부", example = "false")
+        boolean isBlinded,
         @Schema(description = "조회수", example = "12")
         int viewCount,
         @Schema(description = "좋아요 수", example = "3")
@@ -38,6 +40,7 @@ public record PostSummary(
                 result.category(),
                 result.writerNickname(),
                 result.isPinned(),
+                result.isBlinded(),
                 result.viewCount(),
                 result.likeCount(),
                 result.commentCount(),

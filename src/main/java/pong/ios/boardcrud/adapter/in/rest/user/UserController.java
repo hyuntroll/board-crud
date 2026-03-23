@@ -10,7 +10,7 @@ import pong.ios.boardcrud.adapter.in.rest.user.dto.response.UserResponse;
 import pong.ios.boardcrud.application.port.in.user.CreateUserUseCase;
 import pong.ios.boardcrud.application.port.in.user.GetUserUseCase;
 import pong.ios.boardcrud.application.port.in.user.dto.UserResult;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 
 @RestController
 @RequestMapping("/api/v1/user")

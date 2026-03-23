@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import pong.ios.boardcrud.adapter.in.rest.comment.dto.request.CreateCommentRequest;
 import pong.ios.boardcrud.adapter.in.rest.comment.dto.request.UpdateCommentRequest;
 import pong.ios.boardcrud.adapter.in.rest.comment.dto.response.CommentResponse;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 
 import java.util.List;
 

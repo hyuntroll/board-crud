@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pong.ios.boardcrud.adapter.in.rest.post.docs.PostControllerDocs;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.request.CreatePostRequest;
+import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostCommentPolicyRequest;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostRequest;
+import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostVisibilityRequest;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.response.PostResponse;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.response.PostSummary;
 import pong.ios.boardcrud.application.port.in.post.CreatePostUseCase;
@@ -17,8 +19,10 @@ import pong.ios.boardcrud.application.port.in.post.UpdatePostUseCase;
 import pong.ios.boardcrud.application.port.in.post.UnpinPostUseCase;
 import pong.ios.boardcrud.application.port.in.like.LikePostUseCase;
 import pong.ios.boardcrud.application.port.in.like.UnlikePostUseCase;
+import pong.ios.boardcrud.application.port.in.postsetting.UpdatePostCommentPolicyUseCase;
+import pong.ios.boardcrud.application.port.in.postsetting.UpdatePostVisibilityUseCase;
 import pong.ios.boardcrud.application.port.in.post.dto.PostResult;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 import pong.ios.boardcrud.global.data.PageQuery;
 import pong.ios.boardcrud.global.data.PageResult;
 
@@ -34,6 +38,8 @@ public class PostController implements PostControllerDocs {
     private final UnpinPostUseCase unpinPostUseCase;
     private final LikePostUseCase likePostUseCase;
     private final UnlikePostUseCase unlikePostUseCase;
+    private final UpdatePostVisibilityUseCase updatePostVisibilityUseCase;
+    private final UpdatePostCommentPolicyUseCase updatePostCommentPolicyUseCase;
 
     @Override
     @PostMapping
@@ -109,5 +115,19 @@ public class PostController implements PostControllerDocs {
     public ResponseEntity<BaseResponse<Void>> unlikePost(@PathVariable Long postId) {
         unlikePostUseCase.unlikePost(postId);
         return BaseResponse.ok("게시글 좋아요를 취소했습니다.");
+    }
+
+    @Override
+    @PatchMapping("/{postId}/visibility")
+    public ResponseEntity<BaseResponse<Void>> updateVisibility(@PathVariable Long postId, @Valid @RequestBody UpdatePostVisibilityRequest request) {
+        updatePostVisibilityUseCase.updateVisibility(postId, request.isPublic());
+        return BaseResponse.ok("게시글 공개 설정이 변경되었습니다.");
+    }
+
+    @Override
+    @PatchMapping("/{postId}/comment-policy")
+    public ResponseEntity<BaseResponse<Void>> updateCommentPolicy(@PathVariable Long postId, @Valid @RequestBody UpdatePostCommentPolicyRequest request) {
+        updatePostCommentPolicyUseCase.updateCommentPolicy(postId, request.isCommentAllowed());
+        return BaseResponse.ok("게시글 댓글 허용 설정이 변경되었습니다.");
     }
 }

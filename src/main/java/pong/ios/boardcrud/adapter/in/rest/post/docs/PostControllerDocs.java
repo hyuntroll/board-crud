@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.request.CreatePostRequest;
+import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostCommentPolicyRequest;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostRequest;
+import pong.ios.boardcrud.adapter.in.rest.post.dto.request.UpdatePostVisibilityRequest;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.response.PostResponse;
 import pong.ios.boardcrud.adapter.in.rest.post.dto.response.PostSummary;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 import pong.ios.boardcrud.global.data.PageResult;
 
 @Tag(name = "Post", description = "게시글 API")
@@ -118,4 +120,28 @@ public interface PostControllerDocs {
     })
     @SecurityRequirement(name = "bearerAuth")
     ResponseEntity<BaseResponse<Void>> unlikePost(@PathVariable Long postId);
+
+    @Operation(summary = "게시글 공개 설정 변경")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "변경 성공"),
+            @ApiResponse(responseCode = "400", description = "요청값 검증 실패"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "403", description = "수정 권한 없음"),
+            @ApiResponse(responseCode = "404", description = "게시글 없음"),
+            @ApiResponse(responseCode = "409", description = "삭제된 게시글")
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    ResponseEntity<BaseResponse<Void>> updateVisibility(@PathVariable Long postId, @Valid @RequestBody UpdatePostVisibilityRequest request);
+
+    @Operation(summary = "게시글 댓글 허용 설정 변경")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "변경 성공"),
+            @ApiResponse(responseCode = "400", description = "요청값 검증 실패"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "403", description = "수정 권한 없음"),
+            @ApiResponse(responseCode = "404", description = "게시글 없음"),
+            @ApiResponse(responseCode = "409", description = "삭제된 게시글")
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    ResponseEntity<BaseResponse<Void>> updateCommentPolicy(@PathVariable Long postId, @Valid @RequestBody UpdatePostCommentPolicyRequest request);
 }

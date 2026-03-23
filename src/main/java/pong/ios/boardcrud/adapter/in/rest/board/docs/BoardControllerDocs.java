@@ -13,7 +13,7 @@ import pong.ios.boardcrud.adapter.in.rest.board.dto.request.CreateBoardRequest;
 import pong.ios.boardcrud.adapter.in.rest.board.dto.request.GrantBoardManagerRequest;
 import pong.ios.boardcrud.adapter.in.rest.board.dto.request.UpdateBoardRequest;
 import pong.ios.boardcrud.adapter.in.rest.board.dto.response.BoardResponse;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 
 @Tag(name = "Board", description = "게시판 API")
 public interface BoardControllerDocs {

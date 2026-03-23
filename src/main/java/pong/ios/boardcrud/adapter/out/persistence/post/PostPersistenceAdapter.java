@@ -33,7 +33,7 @@ public class PostPersistenceAdapter implements LoadPostPort, SavePostPort {
 
     @Override
     public PageResult<Post> findAll(PageQuery query) {
-        Page<Post> page = postRepository.findAllByStatus(
+        Page<Post> page = postRepository.findAllByStatusAndIsPublicTrueAndIsBlindedFalse(
                         PostStatus.PUBLISHED,
                         toPageable(query)
                 )
@@ -44,7 +44,7 @@ public class PostPersistenceAdapter implements LoadPostPort, SavePostPort {
 
     @Override
     public PageResult<Post> findAllByBoardId(Long boardId, PageQuery query) {
-        Page<Post> page = postRepository.findAllByBoard_IdAndStatus(
+        Page<Post> page = postRepository.findAllByBoard_IdAndStatusAndIsPublicTrueAndIsBlindedFalse(
                         boardId,
                         PostStatus.PUBLISHED,
                         toPageable(query)

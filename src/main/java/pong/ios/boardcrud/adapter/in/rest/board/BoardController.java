@@ -10,7 +10,7 @@ import pong.ios.boardcrud.adapter.in.rest.board.dto.request.GrantBoardManagerReq
 import pong.ios.boardcrud.adapter.in.rest.board.dto.request.UpdateBoardRequest;
 import pong.ios.boardcrud.adapter.in.rest.board.dto.response.BoardResponse;
 import pong.ios.boardcrud.application.port.in.board.*;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 
 @RestController
 @RequiredArgsConstructor

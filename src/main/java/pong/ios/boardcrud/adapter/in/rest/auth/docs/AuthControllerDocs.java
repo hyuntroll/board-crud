@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import pong.ios.boardcrud.adapter.in.rest.auth.dto.request.LoginRequest;
 import pong.ios.boardcrud.adapter.in.rest.auth.dto.request.LogoutRequest;
 import pong.ios.boardcrud.adapter.in.rest.auth.dto.request.ReissueRequest;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 import pong.ios.boardcrud.global.infra.security.jwt.model.JwtPayload;
 
 @Tag(name = "Auth", description = "인증 API")

@@ -14,8 +14,8 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     Optional<PostEntity> findById(Long id);
 
     @EntityGraph(attributePaths = {"user", "tags"})
-    Page<PostEntity> findAllByStatus(PostStatus status, Pageable pageable);
+    Page<PostEntity> findAllByStatusAndIsPublicTrueAndIsBlindedFalse(PostStatus status, Pageable pageable);
 
     @EntityGraph(attributePaths = {"user", "tags"})
-    Page<PostEntity> findAllByBoard_IdAndStatus(Long boardId, PostStatus status, Pageable pageable);
+    Page<PostEntity> findAllByBoard_IdAndStatusAndIsPublicTrueAndIsBlindedFalse(Long boardId, PostStatus status, Pageable pageable);
 }

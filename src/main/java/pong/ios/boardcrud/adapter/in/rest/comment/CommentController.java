@@ -12,10 +12,9 @@ import pong.ios.boardcrud.application.port.in.comment.CreateCommentUseCase;
 import pong.ios.boardcrud.application.port.in.comment.DeleteCommentUseCase;
 import pong.ios.boardcrud.application.port.in.comment.GetCommentUseCase;
 import pong.ios.boardcrud.application.port.in.comment.UpdateCommentUseCase;
-import pong.ios.boardcrud.application.port.in.comment.dto.CommentResult;
 import pong.ios.boardcrud.application.port.in.like.LikeCommentUseCase;
 import pong.ios.boardcrud.application.port.in.like.UnlikeCommentUseCase;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 
 import java.util.List;
 

@@ -53,6 +53,7 @@ public class CommentService implements
     public CommentResult createComment(CreateCommentCommand command) {
         User user = getCurrentUser();
         Post post = getPublishedPost(command.postId());
+        validateCommentAllowed(post);
 
         if (command.parentId() != null) {
             throw new ApplicationException(CommentStatusCode.COMMENT_REPLY_NOT_ALLOWED);
@@ -124,7 +125,8 @@ public class CommentService implements
 
     @Override
     public List<CommentResult> getCommentsByPost(Long postId) {
-        getPublishedPost(postId);
+        Post post = getPublishedPost(postId);
+        validateCommentAllowed(post);
         return loadCommentPort.findAllByPostId(postId).stream()
                 .filter(comment -> comment.getParent() == null)
                 .map(CommentResult::from)
@@ -135,6 +137,8 @@ public class CommentService implements
     public List<CommentResult> getReplies(Long commentId) {
         Comment parent = getComment(commentId);
         validateNotDeleted(parent);
+        Post post = getPublishedPost(parent.getPost().getId());
+        validateCommentAllowed(post);
 
         return loadCommentPort.findAllByParentId(commentId).stream()
                 .map(CommentResult::from)
@@ -187,6 +191,12 @@ public class CommentService implements
     private void validateNotDeleted(Comment comment) {
         if (comment.getStatus() == CommentStatus.DELETED) {
             throw new ApplicationException(CommentStatusCode.COMMENT_DELETED);
+        }
+    }
+
+    private void validateCommentAllowed(Post post) {
+        if (!post.isCommentAllowed()) {
+            throw new ApplicationException(PostErrorStatusCode.POST_COMMENT_NOT_ALLOWED);
         }
     }
 }

@@ -1,4 +1,4 @@
-package pong.ios.boardcrud.global.data;
+package pong.ios.boardcrud.adapter.in.rest.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.ResponseEntity;

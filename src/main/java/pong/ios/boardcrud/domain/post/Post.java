@@ -20,6 +20,9 @@ public class Post {
     private String category;
     private List<String> tags;
     private PostStatus status;
+    private boolean isPublic;
+    private boolean isCommentAllowed;
+    private boolean isBlinded;
     private boolean isPinned;
     private LocalDateTime pinnedAt;
     private User pinnedBy;
@@ -53,6 +56,22 @@ public class Post {
     public void softDelete(LocalDateTime deletedAt, LocalDateTime updatedAt) {
         this.status = PostStatus.DELETED;
         this.deletedAt = deletedAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public void changeVisibility(boolean isPublic, LocalDateTime updatedAt) {
+        this.isPublic = isPublic;
+        this.updatedAt = updatedAt;
+    }
+
+    public void changeCommentPolicy(boolean isCommentAllowed, LocalDateTime updatedAt) {
+        this.isCommentAllowed = isCommentAllowed;
+        this.updatedAt = updatedAt;
+    }
+
+    public void blind(LocalDateTime updatedAt) {
+        this.isPublic = false;
+        this.isBlinded = true;
         this.updatedAt = updatedAt;
     }
 

@@ -53,6 +53,15 @@ public class PostEntity extends BaseEntity {
     private PostStatus status;
 
     @Column(nullable = false)
+    private boolean isPublic;
+
+    @Column(nullable = false)
+    private boolean isCommentAllowed;
+
+    @Column(nullable = false)
+    private boolean isBlinded;
+
+    @Column(nullable = false)
     private boolean isPinned;
 
     private LocalDateTime pinnedAt;
@@ -79,6 +88,9 @@ public class PostEntity extends BaseEntity {
             String category,
             List<String> tags,
             PostStatus status,
+            boolean isPublic,
+            boolean isCommentAllowed,
+            boolean isBlinded,
             boolean isPinned,
             LocalDateTime pinnedAt,
             UserEntity pinnedBy,
@@ -92,6 +104,9 @@ public class PostEntity extends BaseEntity {
         this.category = category;
         this.tags = new ArrayList<>(tags);
         this.status = status;
+        this.isPublic = isPublic;
+        this.isCommentAllowed = isCommentAllowed;
+        this.isBlinded = isBlinded;
         this.isPinned = isPinned;
         this.pinnedAt = pinnedAt;
         this.pinnedBy = pinnedBy;

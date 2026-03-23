@@ -15,7 +15,7 @@ import pong.ios.boardcrud.adapter.in.rest.auth.dto.request.ReissueRequest;
 import pong.ios.boardcrud.application.port.in.auth.LoginUseCase;
 import pong.ios.boardcrud.application.port.in.auth.LogoutUseCase;
 import pong.ios.boardcrud.application.port.in.auth.ReissueTokenUseCase;
-import pong.ios.boardcrud.global.data.BaseResponse;
+import pong.ios.boardcrud.adapter.in.rest.common.BaseResponse;
 import pong.ios.boardcrud.global.infra.security.jwt.model.JwtPayload;
 
 @RestController
