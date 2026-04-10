@@ -9,8 +9,9 @@ spring:
       hibernate:
         format_sql: true
         show-sql: false
-    open-in-view: false
+    open-in-view: true
     defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   jwt:
     secret-key: ${JWT_SECRET_KEY:?JWT_SECRET_KEY missing}
@@ -21,7 +22,7 @@ spring:
     url: ${DB_URL:?DB_URL missing}
     username: ${DB_USERNAME:?DB_USERNAME missing}
     password: ${DB_PASSWORD:?DB_PASSWORD missing}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
 
   data:
     redis:
