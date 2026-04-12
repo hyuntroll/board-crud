@@ -24,11 +24,6 @@ spring:
     password: ${DB_PASSWORD:?DB_PASSWORD missing}
     driver-class-name: ${DB_DRIVER_CLASS_NAME}
 
-  data:
-    redis:
-      host: ${REDIS_URL:?REDIS_URL missing}
-      port: ${REDIS_PORT:?REDIS_PORT missing}
-
   auth:
     attempt-window: 30
     lock-duration: 30
@@ -54,6 +49,11 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.jdbc.datasource.init: DEBUG
     org.springframework.jdbc: DEBUG
+
+sql:
+  init:
+    mode: always
+    schema-locations: classpath:schema-postgresql-auth.sql
 
 #server:
 #  forward-headers-strategy: framework
